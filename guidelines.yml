@@ -1,0 +1,170 @@
+
+version: 2.0
+last_updated: 2024-03-20
+description: |
+  This is a live document that will be updated as we add more guidelines and standards for development across frontend, backend, and infrastructure.
+  This document serves as the source of truth for architectural decisions, coding standards,
+  and technical requirements. The document is intended to be used as a reference to ensure consistency across the codebase.
+enforcement_rules:
+  review_type: mandatory_pull_request
+  compliance_check: precommit_hooks
+
+refactoring:
+  priority: high
+  importance: critical
+  note: |
+    **IMPORTANT:** These guidelines are essential for maintaining code integrity and consistency. Please read and follow them carefully.
+  general_guidelines:
+    - "Understand the Codebase and Its Dependencies: Map out module relationships using static analysis tools and dependency graphs before initiating any refactoring."
+    - "Comprehensive Reference Update: When editing or renaming files or APIs, search for and update all references (imports, test cases, documentation, etc.) to propagate changes consistently."
+    - "Incremental Changes: Break refactoring into small, isolated commits. This ensures easier testing, debugging, and rollback if issues arise."
+  backward_compatibility:
+    - "Preserve Public APIs: Strive to maintain backward compatibility by minimizing breaking changes. When changes are necessary, ensure they are clearly documented."
+    - "Deprecation Strategies: Introduce deprecation warnings and provide migration paths for breaking changes, allowing consumers time to adapt."
+
+frontend:
+  component_development:
+    - "Functional components with TypeScript: No class components except for Error Boundaries"
+    - "Next.js App Router: Use /app directory structure with server components by default"
+    - "State management: 
+        - React Query (v5+) for server state 
+        - Context API only for global UI state (theme, auth)" 
+    - "Accessibility: 
+        - All interactive elements pass axe-core tests 
+        - ARIA roles required for custom components"
+    - "Testing: 
+        - Unit tests: 90% component coverage (Jest + Testing Library) 
+        - E2E: Critical user flows in Playwright"
+
+  styling:
+    - "Tailwind classes only except for global CSS variables"
+    - "Responsive breakpoints: sm(640)/md(768)/lg(1024)/xl(1280)"
+    - "Theme: Use CSS variables from src/styles/theme/tokens.ts"
+    - "Animation: Use @next/font for fonts, framer-motion for complex animations"
+
+  api_contracts:
+    - "Next.js Routes:
+        - GET/POST handlers only in route.ts 
+        - Zod validation for all inputs"
+    - "React Query:
+        - Query keys must be in src/lib/queryKeys.ts 
+        - Mutations must implement optimistic updates"
+    - "Type safety:
+        - Generate client types from backend OpenAPI spec
+        - API response types must match frontend types/*.d.ts"
+
+backend:
+  service_layer:
+    - "NestJS Modules:
+        - @Module() must declare all dependencies 
+        - Core modules in src/modules/core/"
+    - "Validation:
+        - All DTOs must use class-validator decorators 
+        - @IsUUID() for ID parameters 
+        - @Transform() for data normalization"
+    - "Error handling:
+        - Custom exceptions must extend HttpException 
+        - Error codes must be in @ApiResponse() docs"
+    - "Authorization:
+        - @Roles() decorator required for sensitive endpoints 
+        - Audit logs for admin actions"
+    - "GraphQL:
+        - Register enums with @nestjs/graphql using registerEnumType
+        - All input types must use class-validator decorators
+        - Custom exceptions for domain-specific errors
+        - Comprehensive field and operation descriptions"
+
+  database:
+    - "PostgreSQL:
+        - Version 14+ required
+        - Local development requires postgresql-contrib package"
+    - "TypeORM:
+        - Entities must match SQL migration files 
+        - Repositories must be injected via @InjectRepository()"
+    - "Migrations:
+        - pnpm db:migrate for applying migrations
+        - pnpm migration:generate for schema changes 
+        - No direct production schema modifications"
+    - "Performance:
+        - @Index() required for columns in WHERE clauses 
+        - Explain plan analysis for slow queries
+        - Connection pooling required in production"
+
+  api_endpoints:
+    - "REST:
+        - /api/* for non-GraphQL endpoints 
+        - Response envelopes { data: ..., error: ... }"
+    - "GraphQL:
+        - @Query()/@Mutation() must have @Args() validation 
+        - N+1 query prevention with DataLoader
+        - Field-level descriptions for schema documentation
+        - Custom scalar types for complex data"
+    - "Security:
+        - JWT tokens: 15m expiry with refresh tokens 
+        - Cookies: SameSite=Strict; HttpOnly"
+
+  ci:
+    - "Turbo: build -> lint -> test -> e2e pipeline"
+    - "No warnings in build output"
+    - "Codecov: 80% coverage diff check"
+    - "Workspace structure:
+        - apps/web: Next.js application
+        - packages/tsconfig: Shared TypeScript configurations
+        - packages/eslint-config: Shared ESLint configurations"
+
+security:
+  mandatory:
+    - "SAST: OWASP dependency check on PRs"
+    - "Secrets: git-secrets hook prevents credential commits"
+    - "Inputs:
+        - SQL parameters must use typeORM .where() 
+        - No raw user input in DB queries" 
+    - "Auth:
+        - Microsoft Identity Web library required for AD 
+        - Session timeout: 8h inactivity"
+
+typescript:
+  config_architecture:
+    extends_strategy: "Base config from packages/tsconfig/base.json"
+    strictness_tiers:
+      - "Frontend (Next.js): Strict mode enabled via ESNext modules"
+      - "Backend (NestJS): Gradual strictness with CommonJS modules"
+      - "Shared types: Full strictness checks"
+      
+  compiler_rules:
+    - "Module resolution:
+        - App projects: NodeNext (aligns with base.json's node + ESNext)
+        - Packages: Bundler-friendly isolation (matches base.json)"
+    - "Validation priorities:
+        - Frontend: Strict null checks (from Next.js template)
+        - Backend: Interface type safety (via NestJS decorators)"
+    - "Error behavior:
+        - noImplicitReturns: false (matches base.json)
+        - strictPropertyInitialization: false (from base.json)" 
+
+  tooling_integration:
+    - "ESLint core rules:
+        - @typescript-eslint/no-unused-vars: warn (matches eslint.config.js)
+        - explicit-function-return-type: error (for public APIs)"
+    - "Critical exclusions:
+        - no-explicit-any: off (from backend config)
+        - no-unsafe-argument: off (aligns with current setup)"
+    - "Decorator handling:
+        - experimentalDecorators: true (implicit in NestJS usage)
+        - emitDecoratorMetadata: true (required for TypeORM)"
+
+  evolutionary_guarantees:
+    - "Type assertions:
+        - Required validation when using as syntax
+        - Disallowed after property access (obj!.prop)"
+    - "Declaration strategy:
+        - declaration: true (from base.json)
+        - .d.ts files for public API contracts"
+    - "Modern JS interop:
+        - esModuleInterop: true (matches base.json) 
+        - forceConsistentCasing: true (from base.json)"
+
+exceptions:
+  - "Breaking changes require ADR review"
+  - "Emergency hotfixes: post-merge audit required"
+  - "New dependencies: security team approval"

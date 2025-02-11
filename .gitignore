@@ -1,0 +1,24 @@
+.aider*
+
+# Turbo
+.turbo/
+.turbo/**/
+.turbo/daemon/
+.turbo/cookies/
+
+# Build outputs (from turbo.json pipeline)
+.next/
+dist/
+
+# Test outputs (from turbo.json pipeline)
+coverage/
+
+# Node
+node_modules/
+
+# Environment files (from turbo.json globalDependencies)
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
