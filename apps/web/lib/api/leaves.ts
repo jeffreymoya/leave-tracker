@@ -5,8 +5,8 @@ export const getLeaves = async (): Promise<Leave[]> => {
   // Mock API call
   return Array.from({ length: 5 }, (_, i) => ({
     id: `${i}`,
-    startDate: new Date(Date.now() + i * 86400000),
-    endDate: new Date(Date.now() + (i + 1) * 86400000),
+    startDate: new Date(Date.now() + i * 86400000).toISOString().split('T')[0],
+    endDate: new Date(Date.now() + (i + 1) * 86400000).toISOString().split('T')[0],
     type: ['Vacation', 'Sick', 'Personal'][i % 3],
     status: ['Pending', 'Approved', 'Rejected'][i % 3]
   }))

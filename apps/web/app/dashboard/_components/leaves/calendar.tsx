@@ -29,8 +29,9 @@ export function LeaveCalendar({ data }: { data: Leave[] }) {
     <Calendar
       localizer={localizer}
       events={events}
-      className="bg-white rounded-lg border p-4"
-      toolbar={false}
+      className="bg-white rounded-lg border p-4 h-[600px]"
+      toolbar={true}
+      aria-label="Leave calendar"
     />
   )
 }
