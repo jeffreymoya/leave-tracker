@@ -4,7 +4,7 @@ import ProfileDropdown from './profile-dropdown'
 
 export default function Navigation() {
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-[var(--primary)] shadow-md z-50">
+    <nav className="relative bg-[var(--primary)] shadow-md z-50">
       <div className="container h-16 flex items-center justify-between">
         <Link 
           href="/" 

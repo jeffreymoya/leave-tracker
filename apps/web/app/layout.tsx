@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body suppressHydrationWarning className="bg-primary-background bg-gradient-surface min-h-screen flex flex-col">
         <div className="flex-1 flex flex-col">
           <Navigation />
-          <main className="flex-1 flex flex-col max-w-5xl w-full mx-auto px-6 py-16">
+          <main className="flex-1 flex flex-col max-w-7xl w-full mx-auto px-6 py-0">
             <Providers>
               <div className="flex-1 flex flex-col">
                 {children}

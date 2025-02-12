@@ -4,7 +4,7 @@ import { PlusIcon } from '@heroicons/react/24/outline'
 
 export function FloatingActionButton() {
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-8 lg:right-[calc((100vw-1280px)/2+5rem)] transition-all duration-200">
       <button
         className="p-4 bg-[var(--accent)] text-white rounded-full shadow-lg 
                    hover:bg-[var(--accent-hover)] active:scale-95
