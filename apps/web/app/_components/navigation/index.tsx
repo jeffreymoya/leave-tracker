@@ -5,17 +5,18 @@ import ProfileDropdown from './profile-dropdown'
 export default function Navigation() {
   return (
     <nav className="relative bg-[var(--primary)] shadow-md z-50">
-      <div className="container h-16 flex items-center justify-between">
+      <div className="container h-20 flex items-center justify-between">
         <Link 
+          id="header-logo"
           href="/" 
-          className="text-[var(--accent)] text-2xl font-semibold hover:text-[var(--accent-hover)] 
+          className="font-sans font-light text-[var(--accent)] text-4xl hover:text-[var(--accent-hover)] 
                      transition-colors flex-shrink-0 focus:outline-none focus:ring-2 
                      focus:ring-[var(--accent)] focus:ring-offset-2 rounded-lg px-2"
         >
           SYNPH Leave Tracker
         </Link>
         
-        <div className="hidden md:flex items-center gap-8 flex-grow justify-center">
+        <div id="header-nav" className="hidden md:flex items-center gap-8 flex-grow justify-end mr-10">
           <Link 
             href="/dashboard" 
             className="nav-link text-white/90 hover:text-white font-medium"
