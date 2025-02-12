@@ -1,18 +1,20 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Leave } from '@/types/leaves'
 
-export const getLeaves = async (): Promise<Leave[]> => {
-  // Mock API call
+export async function getLeaves(): Promise<Leave[]> {
   return Array.from({ length: 5 }, (_, i) => ({
-    id: `${i}`,
-    startDate: new Date(Date.now() + i * 86400000).toISOString().split('T')[0],
-    endDate: new Date(Date.now() + (i + 1) * 86400000).toISOString().split('T')[0],
-    type: ['Vacation', 'Sick', 'Personal'][i % 3],
-    status: ['Pending', 'Approved', 'Rejected'][i % 3]
+    id: `leave-${i + 1}`,
+    startDate: '2024-03-20',
+    endDate: '2024-03-25',
+    type: 'Vacation' as const,
+    status: 'Pending' as const,
+    userId: 'user-1'
   }))
 }
 
-export const useLeavesQuery = () => useQuery({
-  queryKey: ['leaves'],
-  queryFn: getLeaves
-})
+export function useLeavesQuery() {
+  return {
+    data: [] as Leave[],
+    isLoading: false
+  }
+}
