@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-import { Navigation } from './_components/navigation'
+import Navigation from './_components/navigation'
 import { Providers } from './_components/providers'
 import './globals.css'
 
