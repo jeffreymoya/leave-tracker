@@ -43,62 +43,126 @@ export default function DashboardPage() {
     <div className="container py-8">
       <div className="flex flex-col gap-8">
         {/* Filters */}
-        <div>
-          <div className="flex flex-wrap gap-6">
-            <div className="border-b border-gray-200">
-              <nav className="-mb-px flex space-x-8" aria-label="View">
-                <button
-                  onClick={() => setView('list')}
-                  className={`${
-                    view === 'list'
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  } whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium`}
-                >
-                  List View
-                </button>
-                <button
-                  onClick={() => setView('calendar')}
-                  className={`${
-                    view === 'calendar'
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                  } whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium`}
-                >
-                  Calendar View
-                </button>
-              </nav>
-            </div>
-            
-            <div className="flex flex-wrap gap-4">
-              <div>
-                <label htmlFor="type-select" className="label">Leave Type</label>
-                <select
-                  id="type-select"
-                  className="input"
-                  onChange={e => setFilters(prev => ({ ...prev, type: e.target.value as LeaveType }))}
-                  value={filters.type || ''}
-                >
-                  <option value="">All Types</option>
-                  <option value="Vacation">Vacation</option>
-                  <option value="Sick">Sick</option>
-                  <option value="Personal">Personal</option>
-                </select>
+        <div className="border-b border-gray-200">
+          <div className="flex flex-col gap-4">
+            <nav className="-mb-px flex space-x-8" aria-label="View">
+              <button
+                onClick={() => setView('list')}
+                className={`${
+                  view === 'list'
+                    ? 'border-orange-500 text-orange-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } whitespace-nowrap border-b-2 py-4 px-1 text-base font-medium`}
+              >
+                List View
+              </button>
+              <button
+                onClick={() => setView('calendar')}
+                className={`${
+                  view === 'calendar'
+                    ? 'border-orange-500 text-orange-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                } whitespace-nowrap border-b-2 py-4 px-1 text-base font-medium`}
+              >
+                Calendar View
+              </button>
+            </nav>
+
+            <div id="filters" className="flex items-center gap-4 pb-4">
+              <div className="relative inline-block text-left">
+                <div>
+                  <button
+                    type="button"
+                    className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                    onClick={(e) => {
+                      const menu = document.getElementById('type-menu')
+                      menu?.classList.toggle('hidden')
+                    }}
+                  >
+                    <span>Type</span>
+                    {filters.type && (
+                      <>
+                        <span className="ml-1.5 text-sm text-gray-600">: {filters.type}</span>
+                      </>
+                    )}
+                    <svg className="ml-2 h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="type-menu" className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none hidden">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setFilters(prev => ({ ...prev, type: undefined }))
+                        document.getElementById('type-menu')?.classList.add('hidden')
+                      }}
+                      className={`block px-4 py-2 text-sm w-full text-left ${!filters.type ? 'font-medium text-gray-900' : 'text-gray-500'}`}
+                    >
+                      All Types
+                    </button>
+                    {['Vacation', 'Sick', 'Personal'].map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => {
+                          setFilters(prev => ({ ...prev, type: type as LeaveType }))
+                          document.getElementById('type-menu')?.classList.add('hidden')
+                        }}
+                        className={`block px-4 py-2 text-sm w-full text-left ${filters.type === type ? 'font-medium text-gray-900' : 'text-gray-500'}`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="status-select" className="label">Status</label>
-                <select
-                  id="status-select"
-                  className="input"
-                  onChange={e => setFilters(prev => ({ ...prev, status: e.target.value as LeaveStatus }))}
-                  value={filters.status || ''}
-                >
-                  <option value="">All Status</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
+              <div className="relative inline-block text-left">
+                <div>
+                  <button
+                    type="button"
+                    className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
+                    onClick={(e) => {
+                      const menu = document.getElementById('status-menu')
+                      menu?.classList.toggle('hidden')
+                    }}
+                  >
+                    <span>Status</span>
+                    {filters.status && (
+                      <>
+                        <span className="ml-1.5 text-sm text-gray-600">: {filters.status}</span>
+                      </>
+                    )}
+                    <svg className="ml-2 h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+                <div id="status-menu" className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none hidden">
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setFilters(prev => ({ ...prev, status: undefined }))
+                        document.getElementById('status-menu')?.classList.add('hidden')
+                      }}
+                      className={`block px-4 py-2 text-sm w-full text-left ${!filters.status ? 'font-medium text-gray-900' : 'text-gray-500'}`}
+                    >
+                      All Status
+                    </button>
+                    {['Pending', 'Approved', 'Rejected'].map((status) => (
+                      <button
+                        key={status}
+                        onClick={() => {
+                          setFilters(prev => ({ ...prev, status: status as LeaveStatus }))
+                          document.getElementById('status-menu')?.classList.add('hidden')
+                        }}
+                        className={`block px-4 py-2 text-sm w-full text-left ${filters.status === status ? 'font-medium text-gray-900' : 'text-gray-500'}`}
+                      >
+                        {status}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
