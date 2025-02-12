@@ -41,6 +41,10 @@
     },
     "type-check": {
       "outputs": []
+    },
+    "e2e": {
+      "dependsOn": ["build"],
+      "outputs": ["playwright-report/**", "test-results/**"]
     }
   }
 }

@@ -14,7 +14,8 @@
     "fix:file": "sh -c 'prettier --write $1 && eslint --fix $1' --",
     "tc": "tsc --noEmit",
     "tc:file": "sh -c 'tsc --noEmit 2>&1 | grep -A 1 \"$1\"' --",
-    "test": "jest"
+    "test": "jest",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
