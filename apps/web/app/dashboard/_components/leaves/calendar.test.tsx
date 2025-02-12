@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import { LeaveCalendar } from './calendar'
+
 import type { Leave } from '@/types/leaves'
+import { LeaveCalendar } from '@/app/dashboard/_components/leaves/calendar'
 
 const mockLeaves: Leave[] = [
   {

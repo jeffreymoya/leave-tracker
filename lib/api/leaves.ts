@@ -9,11 +9,4 @@ export async function getLeaves(): Promise<Leave[]> {
     status: 'Pending' as const,
     userId: 'user-1'
   }))
-}
-
-export function useLeavesQuery() {
-  return {
-    data: [] as Leave[],
-    isLoading: false
-  }
-}
+} 

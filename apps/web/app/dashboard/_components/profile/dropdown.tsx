@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
 
 export function ProfileDropdown() {
   const [open, setOpen] = useState(false)

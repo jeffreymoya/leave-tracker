@@ -6,14 +6,14 @@
     "build": "turbo build",
     "start": "turbo start",
     "lint": "turbo lint --concurrency=1",
+    "lint:fix": "turbo lint:fix --concurrency=1",
     "type-check": "turbo type-check --concurrency=1",
     "test": "turbo test --concurrency=1",
     "e2e": "turbo e2e",
     "clean": "turbo clean",
     "cache": "turbo cache",
     "graph": "turbo graph",
-    "info": "turbo info",
-    "lint:fix": "turbo run lint:fix"
+    "info": "turbo info"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.0",
