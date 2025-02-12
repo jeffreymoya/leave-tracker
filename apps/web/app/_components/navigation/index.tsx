@@ -18,22 +18,10 @@ export default function Navigation() {
         
         <div id="header-nav" className="hidden md:flex items-center gap-8 flex-grow justify-end mr-10">
           <Link 
-            href="/dashboard" 
-            className="nav-link text-white/90 hover:text-white font-medium"
-          >
-            Dashboard
-          </Link>
-          <Link 
-            href="/leaves" 
-            className="nav-link text-white/90 hover:text-white font-medium"
-          >
-            Leaves
-          </Link>
-          <Link 
             href="/team" 
-            className="nav-link text-white/90 hover:text-white font-medium"
+            className="nav-link text-white/90 hover:text-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 rounded-lg px-4 py-2 bg-[var(--primary-dark)] hover:bg-[var(--primary-darker)] border border-white/20"
           >
-            Team
+            Team Schedule
           </Link>
         </div>
 

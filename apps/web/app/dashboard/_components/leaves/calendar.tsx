@@ -41,9 +41,9 @@ export function LeaveCalendar({ data }: { data: Leave[] }) {
           const leave = event.resource as Leave
           return {
             className: `
-              ${leave.status === 'Approved' ? 'bg-green-500 hover:bg-green-600' : ''}
+              ${leave.status === 'Approved' ? 'bg-[var(--accent)] hover:bg-[var(--accent-hover)]' : ''}
               ${leave.status === 'Rejected' ? 'bg-red-500 hover:bg-red-600' : ''}
-              ${leave.status === 'Pending' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
+              ${leave.status === 'Pending' ? 'bg-[var(--primary)] hover:opacity-80' : ''}
               text-white rounded-lg border-none transition-colors duration-200
             `
           }
