@@ -1,0 +1,6 @@
+---
+description: address fixable lint issues and run prettier
+globs: *.tsx,*.ts
+---
+- run `pnpm fix:file <path to file created or modified>`
+- run `pnpm tc:file <path to file created or modified>`

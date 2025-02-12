@@ -39,25 +39,33 @@ export function Filters({ view, onViewChange, onFilterChange }: FiltersProps) {
       </div>
 
       <div className="flex gap-4">
-        <select
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50"
-          onChange={(e) => onFilterChange({ type: e.target.value as LeaveType })}
-        >
-          <option value="">All Types</option>
-          <option value="Vacation">Vacation</option>
-          <option value="Sick">Sick</option>
-          <option value="Personal">Personal</option>
-        </select>
+        <div>
+          <label htmlFor="type-select" className="sr-only">Leave Type</label>
+          <select
+            id="type-select"
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50"
+            onChange={e => onFilterChange({ type: e.target.value as LeaveType })}
+          >
+            <option value="">All Types</option>
+            <option value="Vacation">Vacation</option>
+            <option value="Sick">Sick</option>
+            <option value="Personal">Personal</option>
+          </select>
+        </div>
 
-        <select
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50"
-          onChange={(e) => onFilterChange({ status: e.target.value as LeaveStatus })}
-        >
-          <option value="">All Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Rejected">Rejected</option>
-        </select>
+        <div>
+          <label htmlFor="status-select" className="sr-only">Leave Status</label>
+          <select
+            id="status-select"
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50"
+            onChange={e => onFilterChange({ status: e.target.value as LeaveStatus })}
+          >
+            <option value="">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
       </div>
     </div>
   )

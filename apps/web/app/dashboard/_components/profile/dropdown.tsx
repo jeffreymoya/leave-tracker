@@ -18,7 +18,7 @@ export function ProfileDropdown() {
       </button>
 
       {open && (
-        <div 
+        <div
           className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border"
           role="menu"
         >

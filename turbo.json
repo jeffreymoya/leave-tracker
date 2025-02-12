@@ -9,6 +9,24 @@
     "lint": {
       "outputs": []
     },
+    "lint:fix": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": false,
+      "inputs": [
+        "**/*.{ts,tsx,js,jsx}",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/.next/**"
+      ],
+      "persistent": false
+    },
+    "format": {
+      "outputs": []
+    },
+    "format:fix": {
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true
@@ -23,18 +41,6 @@
     },
     "type-check": {
       "outputs": []
-    },
-    "lint:fix": {
-      "dependsOn": [],
-      "outputs": [],
-      "cache": false,
-      "inputs": [
-        "**/*.{ts,tsx,js,jsx}",
-        "!**/node_modules/**",
-        "!**/dist/**",
-        "!**/.next/**"
-      ],
-      "persistent": false
     }
   }
 }

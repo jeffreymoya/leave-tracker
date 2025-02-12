@@ -7,6 +7,9 @@
     "start": "turbo start",
     "lint": "turbo lint --concurrency=1",
     "lint:fix": "turbo lint:fix --concurrency=1",
+    "format": "turbo format --concurrency=1",
+    "format:fix": "turbo format:fix --concurrency=1",
+    "fix": "turbo run format:fix lint:fix --concurrency=1",
     "type-check": "turbo type-check --concurrency=1",
     "test": "turbo test --concurrency=1",
     "e2e": "turbo e2e",
@@ -17,12 +20,14 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.41.0",
-    "eslint": "8.57.0",
+    "@turbo/gen": "^1.12.0",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
-    "typescript": "^5.0.0",
+    "eslint": "8.57.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.5.0",
     "turbo": "^1.12.0",
-    "@turbo/gen": "^1.12.0"
+    "typescript": "^5.0.0"
   },
   "workspaces": [
     "apps/*",

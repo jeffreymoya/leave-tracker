@@ -10,4 +10,4 @@ export interface Leave {
   endDate: string
   reason?: string
   userId: string
-} 
+}

@@ -7,13 +7,7 @@ describe('Filters', () => {
   const mockFilterChange = jest.fn()
 
   beforeEach(() => {
-    render(
-      <Filters 
-        view="list" 
-        onViewChange={mockViewChange}
-        onFilterChange={mockFilterChange}
-      />
-    )
+    render(<Filters view="list" onViewChange={mockViewChange} onFilterChange={mockFilterChange} />)
   })
 
   it('renders view toggle buttons', () => {
@@ -28,27 +22,17 @@ describe('Filters', () => {
   })
 
   it('renders filter controls', () => {
-    expect(screen.getByLabelText('All Types')).toBeInTheDocument()
-    expect(screen.getByLabelText('All Status')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Start Date')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('End Date')).toBeInTheDocument()
+    expect(screen.getByLabelText('Leave Type')).toBeInTheDocument()
+    expect(screen.getByLabelText('Leave Status')).toBeInTheDocument()
   })
 
   it('updates filters when changing values', () => {
-    const typeSelect = screen.getByLabelText('All Types')
+    const typeSelect = screen.getByLabelText('Leave Type')
     fireEvent.change(typeSelect, { target: { value: 'Vacation' } })
-    expect(mockFilterChange).toHaveBeenCalledWith({
-      type: 'Vacation',
-      status: '',
-      dateRange: { start: '', end: '' }
-    })
+    expect(mockFilterChange).toHaveBeenCalledWith({ type: 'Vacation' })
 
-    const startDateInput = screen.getByPlaceholderText('Start Date')
-    fireEvent.change(startDateInput, { target: { value: '2024-01-01' } })
-    expect(mockFilterChange).toHaveBeenCalledWith({
-      type: '',
-      status: '',
-      dateRange: { start: '2024-01-01', end: '' }
-    })
+    const statusSelect = screen.getByLabelText('Leave Status')
+    fireEvent.change(statusSelect, { target: { value: 'Pending' } })
+    expect(mockFilterChange).toHaveBeenCalledWith({ status: 'Pending' })
   })
 })
