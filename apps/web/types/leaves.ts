@@ -10,4 +10,9 @@ export interface Leave {
   endDate: string
   reason?: string
   userId: string
+  attachments?: {
+    id: string
+    type: 'document' | 'image'
+    name: string
+  }[]
 }

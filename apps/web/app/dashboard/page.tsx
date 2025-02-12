@@ -47,7 +47,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4">
             <ViewSwitcher view={view} onViewChange={setView} />
 
-            <div className="flex items-center gap-4 pb-4">
+            <div className="flex items-center gap-6 pb-4">
               <FilterDropdown
                 label="Type"
                 value={filters.type}
