@@ -42,29 +42,32 @@ export default function DashboardPage() {
   return (
     <div className="container py-8">
       <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-4">
-          <h1>Leave Management</h1>
-          <p className="text-[var(--text-secondary)]">
-            Track and manage your team&apos;s leave requests
-          </p>
-        </div>
-
         {/* Filters */}
-        <div className="card">
+        <div>
           <div className="flex flex-wrap gap-6">
-            <div className="flex gap-2">
-              <button
-                className={`btn-primary ${view === 'list' ? '' : '!bg-white !text-[var(--text-primary)] border border-gray-200 hover:!bg-gray-50'}`}
-                onClick={() => setView('list')}
-              >
-                List View
-              </button>
-              <button
-                className={`btn-primary ${view === 'calendar' ? '' : '!bg-white !text-[var(--text-primary)] border border-gray-200 hover:!bg-gray-50'}`}
-                onClick={() => setView('calendar')}
-              >
-                Calendar View
-              </button>
+            <div className="border-b border-gray-200">
+              <nav className="-mb-px flex space-x-8" aria-label="View">
+                <button
+                  onClick={() => setView('list')}
+                  className={`${
+                    view === 'list'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  } whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium`}
+                >
+                  List View
+                </button>
+                <button
+                  onClick={() => setView('calendar')}
+                  className={`${
+                    view === 'calendar'
+                      ? 'border-primary text-primary'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  } whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium`}
+                >
+                  Calendar View
+                </button>
+              </nav>
             </div>
             
             <div className="flex flex-wrap gap-4">
