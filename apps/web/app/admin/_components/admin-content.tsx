@@ -1,8 +1,8 @@
 'use client'
 
-import { LeaveList } from '@/app/dashboard/_components/leaves/list'
 import { LoadingSkeleton } from '@/app/dashboard/_components/loading-skeleton'
 import type { Leave } from '@/types/leaves'
+import { AdminLeaveList } from './admin-leave-list'
 
 interface AdminContentProps {
   isLoading: boolean
@@ -14,5 +14,5 @@ export function AdminContent({ isLoading, data }: AdminContentProps) {
     return <LoadingSkeleton />
   }
 
-  return <LeaveList data={data} />
+  return <AdminLeaveList data={data} />
 } 
