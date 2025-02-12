@@ -1,18 +1,17 @@
 import { test, expect } from '@playwright/test';
 
-test('dashboard page has correct title', async ({ page }) => {
-  // Create a mock page that we can test without a server
-  await page.setContent(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Leave Tracker - Dashboard</title>
-      </head>
-      <body>
-        <h1>Dashboard</h1>
-      </body>
-    </html>
-  `);
+test('should render themed components correctly', async ({ page }) => {
+  await page.goto('/dashboard')
   
-  await expect(page).toHaveTitle(/Leave Tracker/);
-}); 
+  // Verify FAB theming
+  const fab = page.getByTestId('fab-new-request')
+  await expect(fab).toHaveCSS('background-color', 'rgb(26, 26, 26)')
+  
+  // Verify header theming
+  const header = page.locator('nav')
+  await expect(header).toHaveCSS('background-color', 'rgb(236, 108, 26)')
+  
+  // Verify font family
+  const body = page.locator('body')
+  await expect(body).toHaveCSS('font-family', /Inter var/)
+})
