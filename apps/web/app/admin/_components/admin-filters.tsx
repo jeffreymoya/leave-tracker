@@ -55,6 +55,9 @@ interface FilterSection {
 
 export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: AdminFiltersProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const defaultEndDate = new Date().toISOString().split('T')[0]
+  const defaultStartDate = new Date(new Date().setMonth(new Date().getMonth() - 2)).toISOString().split('T')[0]
+
   const [filters, setFilters] = useState<FilterState>({
     type: [],
     status: [],
@@ -63,49 +66,66 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
     hasDocuments: undefined,
     cutoff: [],
     dateRange: {
-      start: undefined,
-      end: undefined
+      start: defaultStartDate,
+      end: defaultEndDate
     }
   })
 
-  const handleFilterChange = (key: keyof FilterState, value: any) => {
+  const handleFilterChange = (key: keyof FilterState, value: string | boolean | { start?: string; end?: string }) => {
     const newFilters = { ...filters }
     
     if (key === 'hasDocuments' || key === 'dateRange') {
-      newFilters[key] = value
+      newFilters[key] = value as any
     } else {
-      const values = newFilters[key]
-      const index = values.indexOf(value)
+      const values = newFilters[key] as Array<string | LeaveType | LeaveStatus>
+      const stringValue = value as string
+      const index = values.indexOf(stringValue)
       if (index > -1) {
         values.splice(index, 1)
       } else {
-        values.push(value)
+        values.push(stringValue)
       }
     }
     
     setFilters(newFilters)
 
     // Convert to API format
-    const apiFilters: Partial<{
-      type?: LeaveType
-      status?: LeaveStatus
-      team?: string
-      department?: string
-      hasDocuments?: boolean
-      cutoff?: string
-      dateRange?: { start?: string; end?: string }
-    }> = {}
+    const apiFilters: AdminFiltersProps['onFilterChange'] extends (filters: infer T) => any ? T : never = {}
     
     Object.entries(newFilters).forEach(([key, value]) => {
-      const k = key as keyof FilterState
+      const k = key as keyof typeof apiFilters
       if (Array.isArray(value) && value.length > 0) {
-        apiFilters[k] = value[0]
+        apiFilters[k] = value[0] as any
       } else if (!Array.isArray(value)) {
-        apiFilters[k] = value
+        apiFilters[k] = value as any
       }
     })
 
     onFilterChange(apiFilters)
+  }
+
+  const isArrayFilter = (key: keyof FilterState): boolean => {
+    return key !== 'hasDocuments' && key !== 'dateRange'
+  }
+
+  const getFilterLength = (filter: FilterState[keyof FilterState]): number => {
+    if (Array.isArray(filter)) {
+      return filter.length
+    }
+    if (typeof filter === 'object' && filter !== null && 'start' in filter) {
+      return (filter.start || filter.end) ? 1 : 0
+    }
+    return filter ? 1 : 0
+  }
+
+  const hasFilterValue = (filter: FilterState[keyof FilterState], value: string): boolean => {
+    if (Array.isArray(filter)) {
+      return filter.some(item => item === value)
+    }
+    if (typeof filter === 'boolean') {
+      return value === filter.toString()
+    }
+    return false
   }
 
   const filterSections: FilterSection[] = [
@@ -163,7 +183,30 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
       newFilters[sectionId] = []
     }
     setFilters(newFilters)
-    onFilterChange({ ...newFilters, [sectionId]: undefined })
+
+    // Create API filters with the cleared section undefined
+    const apiFilters: Partial<{
+      type?: LeaveType
+      status?: LeaveStatus
+      team?: string
+      department?: string
+      hasDocuments?: boolean
+      cutoff?: string
+      dateRange?: { start?: string; end?: string }
+    }> = {}
+    
+    Object.entries(newFilters).forEach(([key, value]) => {
+      const k = key as keyof typeof apiFilters
+      if (key === sectionId) {
+        apiFilters[k] = undefined
+      } else if (Array.isArray(value) && value.length > 0) {
+        apiFilters[k] = value[0] as any
+      } else if (!Array.isArray(value)) {
+        apiFilters[k] = value as any
+      }
+    })
+
+    onFilterChange(apiFilters)
   }
 
   return (
@@ -186,6 +229,118 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
 
         <form className="hidden lg:block">
           <div className="space-y-2 divide-y divide-gray-200">
+            <div className="px-4 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-gray-900">Date Range</h3>
+                {(filters.dateRange.start || filters.dateRange.end) && (
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                    Active
+                  </span>
+                )}
+              </div>
+              <div className="mt-4 space-y-4">
+                <div>
+                  <label htmlFor="start-date" className="block text-sm text-gray-600 mb-1">
+                    From
+                  </label>
+                  <input
+                    type="date"
+                    id="start-date"
+                    value={filters.dateRange.start || ''}
+                    max={filters.dateRange.end}
+                    onChange={(e) =>
+                      handleFilterChange('dateRange', {
+                        ...filters.dateRange,
+                        start: e.target.value || undefined
+                      })
+                    }
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="end-date" className="block text-sm text-gray-600 mb-1">
+                    To
+                  </label>
+                  <input
+                    type="date"
+                    id="end-date"
+                    value={filters.dateRange.end || ''}
+                    min={filters.dateRange.start}
+                    onChange={(e) =>
+                      handleFilterChange('dateRange', {
+                        ...filters.dateRange,
+                        end: e.target.value || undefined
+                      })
+                    }
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const end = new Date().toISOString().split('T')[0]
+                      const start = new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0]
+                      handleFilterChange('dateRange', { start, end })
+                    }}
+                    className={classNames(
+                      "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset transition-colors",
+                      filters.dateRange.start === new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0] &&
+                      filters.dateRange.end === new Date().toISOString().split('T')[0]
+                        ? "bg-blue-100 text-blue-700 ring-blue-600/20"
+                        : "bg-gray-50 text-gray-600 ring-gray-500/10 hover:bg-gray-100"
+                    )}
+                  >
+                    Last Month
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const end = new Date().toISOString().split('T')[0]
+                      const start = new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0]
+                      handleFilterChange('dateRange', { start, end })
+                    }}
+                    className={classNames(
+                      "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset transition-colors",
+                      filters.dateRange.start === new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0] &&
+                      filters.dateRange.end === new Date().toISOString().split('T')[0]
+                        ? "bg-blue-100 text-blue-700 ring-blue-600/20"
+                        : "bg-gray-50 text-gray-600 ring-gray-500/10 hover:bg-gray-100"
+                    )}
+                  >
+                    Last 3 Months
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const end = new Date().toISOString().split('T')[0]
+                      const start = new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString().split('T')[0]
+                      handleFilterChange('dateRange', { start, end })
+                    }}
+                    className={classNames(
+                      "inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ring-1 ring-inset transition-colors",
+                      filters.dateRange.start === new Date(new Date().setMonth(new Date().getMonth() - 6)).toISOString().split('T')[0] &&
+                      filters.dateRange.end === new Date().toISOString().split('T')[0]
+                        ? "bg-blue-100 text-blue-700 ring-blue-600/20"
+                        : "bg-gray-50 text-gray-600 ring-gray-500/10 hover:bg-gray-100"
+                    )}
+                  >
+                    Last 6 Months
+                  </button>
+                </div>
+                {(filters.dateRange.start || filters.dateRange.end) && (
+                  <button
+                    type="button"
+                    onClick={() => clearFilter('dateRange')}
+                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                    Clear dates
+                  </button>
+                )}
+              </div>
+            </div>
+
             {filterSections.map((section) => (
               <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-4">
                 {({ open }) => (
@@ -193,10 +348,10 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                     <h3 className="-mx-2 -my-3 flow-root">
                       <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-900">{section.name}</span>
-                          {filters[section.id]?.length > 0 && (
+                        <span className="text-sm font-medium text-gray-900">{section.name}</span>
+                          {getFilterLength(filters[section.id]) > 0 && (
                             <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
-                              {filters[section.id].length} selected
+                              {getFilterLength(filters[section.id])} selected
                             </span>
                           )}
                         </div>
@@ -218,7 +373,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                                 name={`${section.id}[]`}
                                 defaultValue={option.value}
                                 type="checkbox"
-                                checked={filters[section.id]?.includes(option.value)}
+                                checked={hasFilterValue(filters[section.id], option.value)}
                                 onChange={() => handleFilterChange(section.id, option.value)}
                                 className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
                               />
@@ -236,7 +391,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                             )}
                           </div>
                         ))}
-                        {filters[section.id]?.length > 0 && (
+                        {getFilterLength(filters[section.id]) > 0 && (
                           <button
                             type="button"
                             onClick={() => clearFilter(section.id)}
@@ -290,71 +445,14 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                   </label>
                 </div>
                 {filters.hasDocuments !== undefined && (
-                  <button
-                    type="button"
+                <button
+                  type="button"
                     onClick={() => clearFilter('hasDocuments')}
                     className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
-                  >
+                >
                     <XMarkIcon className="h-4 w-4" />
-                    Clear selection
-                  </button>
-                )}
-              </div>
-            </div>
-
-            <div className="border-t border-gray-200 px-4 py-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-900">Date Range</h3>
-                {(filters.dateRange.start || filters.dateRange.end) && (
-                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
-                    Active
-                  </span>
-                )}
-              </div>
-              <div className="mt-4 space-y-4">
-                <div>
-                  <label htmlFor="start-date" className="block text-sm text-gray-600 mb-1">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    id="start-date"
-                    value={filters.dateRange.start || ''}
-                    onChange={(e) =>
-                      handleFilterChange('dateRange', {
-                        ...filters.dateRange,
-                        start: e.target.value || undefined
-                      })
-                    }
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="end-date" className="block text-sm text-gray-600 mb-1">
-                    End Date
-                  </label>
-                  <input
-                    type="date"
-                    id="end-date"
-                    value={filters.dateRange.end || ''}
-                    onChange={(e) =>
-                      handleFilterChange('dateRange', {
-                        ...filters.dateRange,
-                        end: e.target.value || undefined
-                      })
-                    }
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
-                  />
-                </div>
-                {(filters.dateRange.start || filters.dateRange.end) && (
-                  <button
-                    type="button"
-                    onClick={() => clearFilter('dateRange')}
-                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
-                  >
-                    <XMarkIcon className="h-4 w-4" />
-                    Clear dates
-                  </button>
+                  Clear selection
+                </button>
                 )}
               </div>
             </div>
@@ -431,7 +529,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                                         name={`${section.id}[]`}
                                         defaultValue={option.value}
                                         type="radio"
-                                        checked={filters[section.id]?.includes(option.value)}
+                                        checked={hasFilterValue(filters[section.id], option.value)}
                                         onChange={() => handleFilterChange(section.id, option.value)}
                                         className="h-4 w-4 rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]"
                                       />

@@ -74,29 +74,41 @@ export function AdminLeaveList({ data }: AdminLeaveListProps) {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      <div id="action-buttons" className="mb-6 flex gap-3">
+      <div id="action-buttons" className="mb-6 flex gap-2">
         <button
           type="button"
-          className="w-36 inline-flex items-center justify-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 hover:bg-emerald-100 hover:text-emerald-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-50 disabled:hover:text-emerald-700"
+          className={`w-28 inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium ring-1 ring-inset transition-colors ${
+            selectedLeaves.size === 0
+              ? 'bg-white text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
+              : 'bg-gray-50 text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
           disabled={selectedLeaves.size === 0}
         >
-          <CheckIcon className="h-4 w-4" />
+          <CheckIcon className="h-3.5 w-3.5" />
           Approve
         </button>
         <button
           type="button"
-          className="w-36 inline-flex items-center justify-center gap-2 rounded-md bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 ring-1 ring-inset ring-rose-600/20 hover:bg-rose-100 hover:text-rose-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-rose-50 disabled:hover:text-rose-700"
+          className={`w-28 inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium ring-1 ring-inset transition-colors ${
+            selectedLeaves.size === 0
+              ? 'bg-white text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
+              : 'bg-gray-50 text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
           disabled={selectedLeaves.size === 0}
         >
-          <XMarkIcon className="h-4 w-4" />
+          <XMarkIcon className="h-3.5 w-3.5" />
           Reject
         </button>
         <button
           type="button"
-          className="w-36 inline-flex items-center justify-center gap-2 rounded-md bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-600/20 hover:bg-slate-100 hover:text-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-50 disabled:hover:text-slate-700"
+          className={`w-28 inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium ring-1 ring-inset transition-colors ${
+            selectedLeaves.size === 0
+              ? 'bg-white text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
+              : 'bg-gray-50 text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
+          } disabled:opacity-50 disabled:cursor-not-allowed`}
           disabled={selectedLeaves.size === 0}
         >
-          <ArchiveBoxIcon className="h-4 w-4" />
+          <ArchiveBoxIcon className="h-3.5 w-3.5" />
           Archive
         </button>
       </div>
