@@ -2,10 +2,6 @@
 
 import { useState } from 'react'
 
-import { FloatingActionButton } from '@/app/dashboard/_components/fab'
-import { Filters } from '@/app/dashboard/_components/filters'
-import { LeaveList, LeaveCalendar } from '@/app/dashboard/_components/leaves'
-import { ProfileDropdown } from '@/app/dashboard/_components/profile'
 import { useLeavesQuery } from '@/lib/api/leaves'
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
@@ -19,11 +15,11 @@ interface FilterState {
 }
 
 export default function DashboardPage() {
-  const [view, setView] = useState<'list' | 'calendar'>('list')
-  const [filters, setFilters] = useState<FilterState>({})
-  const { data: leaves = [], isLoading, error } = useLeavesQuery()
+  const [_view, _setView] = useState<'list' | 'calendar'>('list')
+  const [filters, _setFilters] = useState<FilterState>({})
+  const { data: leaves = [], isLoading: _isLoading, error: _error } = useLeavesQuery()
 
-  const filteredData = leaves.filter(leave => {
+  const _filteredData = leaves.filter(leave => {
     if (filters.type && leave.type !== filters.type) return false
     if (filters.status && leave.status !== filters.status) return false
     if (filters.dateRange?.start && new Date(leave.startDate) < new Date(filters.dateRange.start))

@@ -3,6 +3,7 @@
 import { format, getDay, parse, startOfWeek } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import type { Leave } from '@/types/leaves'
 

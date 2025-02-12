@@ -1,7 +1,8 @@
 import Link from 'next/link'
+
 import { ProfileDropdown } from './profile-dropdown'
 
-export function Navigation() {
+export default function Navigation() {
   return (
     <nav className="w-full bg-gradient-surface backdrop-blur-sm border-b border-gray-100">
       <div className="container-width">
@@ -35,4 +36,4 @@ export function Navigation() {
       </div>
     </nav>
   )
-} 
+}
