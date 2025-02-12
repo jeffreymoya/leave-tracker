@@ -121,7 +121,7 @@ export function LeaveList({ data = sampleData }: { data?: Leave[] }) {
                 <div className="flex items-start gap-2">
                   <UserIcon className="h-4 w-4 text-[var(--text-secondary)] mt-0.5 flex-shrink-0" aria-hidden="true" />
                   <p className="text-sm text-[var(--text-primary)] line-clamp-2">
-                    Supervisor/Career Advisor: {leave.userId}
+                    Supervisor: {leave.userId}
                   </p>
                 </div>
                 
