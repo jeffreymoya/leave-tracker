@@ -1,11 +1,12 @@
 'use client'
 
 import {
-  CalendarIcon,
+  CalendarDaysIcon,
   ClockIcon,
   DocumentIcon,
   DocumentTextIcon,
   PaperClipIcon,
+  PencilSquareIcon,
   TrashIcon,
   UserIcon,
 } from '@heroicons/react/24/outline'
@@ -16,7 +17,7 @@ import type { Leave } from '@/types/leaves'
 function getLeaveTypeIcon(type: Leave['type']) {
   switch (type) {
     case 'Vacation':
-      return <CalendarIcon className="h-5 w-5 text-blue-500 flex-shrink-0" aria-hidden="true" />
+      return <CalendarDaysIcon className="h-5 w-5 text-blue-500 flex-shrink-0" aria-hidden="true" />
     case 'Sick':
       return <ClockIcon className="h-5 w-5 text-red-500 flex-shrink-0" aria-hidden="true" />
     case 'Personal':
@@ -110,7 +111,7 @@ export function LeaveList({ data = sampleData }: { data?: Leave[] }) {
             <div className="px-4 py-1.5 sm:px-6">
               <div className="space-y-1.5">
                 <div className="flex items-start gap-2">
-                  <CalendarIcon className="h-4 w-4 text-[var(--text-secondary)] flex-shrink-0" aria-hidden="true" />
+                  <CalendarDaysIcon className="h-4 w-4 text-[var(--text-secondary)] flex-shrink-0" aria-hidden="true" />
                   <p className="text-sm font-medium text-[var(--text-primary)]">
                     {new Date(leave.startDate).toLocaleDateString()} to{' '}
                     {new Date(leave.endDate).toLocaleDateString()}
@@ -138,13 +139,22 @@ export function LeaveList({ data = sampleData }: { data?: Leave[] }) {
                 <div className="flex -space-x-2">
                   {renderAttachments(leave.attachments)}
                 </div>
-                <button
-                  className="text-red-500 hover:text-red-600 transition-colors"
-                  onClick={() => {/* Handle delete */}}
-                  aria-label="Delete leave request"
-                >
-                  <TrashIcon className="h-5 w-5" />
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    className="rounded-full p-1 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                    onClick={() => {/* Handle edit */}}
+                    aria-label="Edit leave request"
+                  >
+                    <PencilSquareIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    className="rounded-full p-1 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
+                    onClick={() => {/* Handle delete */}}
+                    aria-label="Delete leave request"
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
