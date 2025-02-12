@@ -34,7 +34,6 @@
         "!**/dist/**",
         "!**/.next/**"
       ],
-      "execution": "fresh",
       "persistent": false
     }
   }
