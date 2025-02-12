@@ -103,19 +103,12 @@ export function LeaveList({ data = sampleData }: { data?: Leave[] }) {
                   >
                     {leave.status}
                   </span>
-                  <button
-                    className="text-gray-400 hover:text-red-500 transition-colors"
-                    onClick={() => {/* Handle delete */}}
-                    aria-label="Delete leave request"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
                 </div>
               </div>
             </div>
             
-            <div className="px-4 py-4 sm:px-6">
-              <div className="space-y-3">
+            <div className="px-4 py-1.5 sm:px-6">
+              <div className="space-y-1.5">
                 <div className="flex items-start gap-2">
                   <CalendarIcon className="h-4 w-4 text-[var(--text-secondary)] flex-shrink-0" aria-hidden="true" />
                   <p className="text-sm font-medium text-[var(--text-primary)]">
@@ -127,7 +120,7 @@ export function LeaveList({ data = sampleData }: { data?: Leave[] }) {
                 <div className="flex items-start gap-2">
                   <UserIcon className="h-4 w-4 text-[var(--text-secondary)] mt-0.5 flex-shrink-0" aria-hidden="true" />
                   <p className="text-sm text-[var(--text-primary)] line-clamp-2">
-                    ID: {leave.userId}
+                    Supervisor/Career Advisor: {leave.userId}
                   </p>
                 </div>
                 
@@ -141,16 +134,17 @@ export function LeaveList({ data = sampleData }: { data?: Leave[] }) {
                 )}
               </div>
               
-              <div className="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+              <div className="mt-2 pt-1.5 border-t border-gray-100 flex items-center justify-between">
                 <div className="flex -space-x-2">
                   {renderAttachments(leave.attachments)}
                 </div>
-                <Link
-                  href={`/leaves/${leave.id}`}
-                  className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors"
+                <button
+                  className="text-red-500 hover:text-red-600 transition-colors"
+                  onClick={() => {/* Handle delete */}}
+                  aria-label="Delete leave request"
                 >
-                  View Details
-                </Link>
+                  <TrashIcon className="h-5 w-5" />
+                </button>
               </div>
             </div>
           </div>

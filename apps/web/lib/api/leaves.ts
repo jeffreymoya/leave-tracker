@@ -5,6 +5,19 @@ import type { Leave, LeaveType, LeaveStatus } from '@/types/leaves'
 const leaveTypes: LeaveType[] = ['Vacation', 'Sick', 'Personal']
 const leaveStatuses: LeaveStatus[] = ['Pending', 'Approved', 'Rejected']
 
+const filipinoNames = [
+  'Juan dela Cruz',
+  'Maria Santos',
+  'Jose Reyes',
+  'Ana Gonzales',
+  'Miguel Ramos',
+  'Rosa Mendoza',
+  'Pedro Garcia',
+  'Carmen Cruz',
+  'Antonio Torres',
+  'Isabella Lopez'
+]
+
 const generateRandomDate = (start: Date, end: Date) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
@@ -60,7 +73,7 @@ export async function getLeaves(): Promise<Leave[]> {
       endDate: endDate.toISOString().split('T')[0],
       type: type,
       status: leaveStatuses[Math.floor(Math.random() * leaveStatuses.length)],
-      userId: 'user-1',
+      userId: filipinoNames[Math.floor(Math.random() * filipinoNames.length)],
       reason: sampleReasons[type][Math.floor(Math.random() * sampleReasons[type].length)],
       attachments: i < 2 ? sampleAttachments[i] : undefined
     }
