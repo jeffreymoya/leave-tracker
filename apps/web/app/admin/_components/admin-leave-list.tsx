@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { CheckIcon, ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, ChevronUpDownIcon, XMarkIcon, ArchiveBoxIcon } from '@heroicons/react/20/solid'
 import { DocumentIcon } from '@heroicons/react/24/outline'
 import type { Leave } from '@/types/leaves'
 
@@ -74,28 +74,32 @@ export function AdminLeaveList({ data }: AdminLeaveListProps) {
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">
-      {selectedLeaves.size > 0 && (
-        <div className="mb-4 flex gap-2">
-          <button
-            type="button"
-            className="rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500"
-          >
-            Approve Selected
-          </button>
-          <button
-            type="button"
-            className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500"
-          >
-            Reject Selected
-          </button>
-          <button
-            type="button"
-            className="rounded-md bg-gray-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500"
-          >
-            Archive Selected
-          </button>
-        </div>
-      )}
+      <div id="action-buttons" className="mb-6 flex gap-3">
+        <button
+          type="button"
+          className="w-36 inline-flex items-center justify-center gap-2 rounded-md bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 hover:bg-emerald-100 hover:text-emerald-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-emerald-50 disabled:hover:text-emerald-700"
+          disabled={selectedLeaves.size === 0}
+        >
+          <CheckIcon className="h-4 w-4" />
+          Approve
+        </button>
+        <button
+          type="button"
+          className="w-36 inline-flex items-center justify-center gap-2 rounded-md bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 ring-1 ring-inset ring-rose-600/20 hover:bg-rose-100 hover:text-rose-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-rose-50 disabled:hover:text-rose-700"
+          disabled={selectedLeaves.size === 0}
+        >
+          <XMarkIcon className="h-4 w-4" />
+          Reject
+        </button>
+        <button
+          type="button"
+          className="w-36 inline-flex items-center justify-center gap-2 rounded-md bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 ring-1 ring-inset ring-slate-600/20 hover:bg-slate-100 hover:text-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-slate-50 disabled:hover:text-slate-700"
+          disabled={selectedLeaves.size === 0}
+        >
+          <ArchiveBoxIcon className="h-4 w-4" />
+          Archive
+        </button>
+      </div>
       <div className="flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">

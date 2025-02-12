@@ -2,7 +2,7 @@
 
 import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { AdjustmentsHorizontalIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon } from '@heroicons/react/20/solid'
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
@@ -28,28 +28,87 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+interface FilterState {
+  type: LeaveType[]
+  status: LeaveStatus[]
+  team: string[]
+  department: string[]
+  hasDocuments: boolean | undefined
+  cutoff: string[]
+  dateRange: {
+    start: string | undefined
+    end: string | undefined
+  }
+}
+
+interface FilterOption {
+  value: string
+  label: string
+  count?: number
+}
+
+interface FilterSection {
+  id: keyof FilterState
+  name: string
+  options: FilterOption[]
+}
+
 export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: AdminFiltersProps) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [filters, setFilters] = useState({
-    type: undefined as LeaveType | undefined,
-    status: undefined as LeaveStatus | undefined,
-    team: undefined as string | undefined,
-    department: undefined as string | undefined,
-    hasDocuments: undefined as boolean | undefined,
-    cutoff: undefined as string | undefined,
+  const [filters, setFilters] = useState<FilterState>({
+    type: [],
+    status: [],
+    team: [],
+    department: [],
+    hasDocuments: undefined,
+    cutoff: [],
     dateRange: {
-      start: undefined as string | undefined,
-      end: undefined as string | undefined
+      start: undefined,
+      end: undefined
     }
   })
 
-  const handleFilterChange = (key: string, value: any) => {
-    const newFilters = { ...filters, [key]: value }
+  const handleFilterChange = (key: keyof FilterState, value: any) => {
+    const newFilters = { ...filters }
+    
+    if (key === 'hasDocuments' || key === 'dateRange') {
+      newFilters[key] = value
+    } else {
+      const values = newFilters[key]
+      const index = values.indexOf(value)
+      if (index > -1) {
+        values.splice(index, 1)
+      } else {
+        values.push(value)
+      }
+    }
+    
     setFilters(newFilters)
-    onFilterChange(newFilters)
+
+    // Convert to API format
+    const apiFilters: Partial<{
+      type?: LeaveType
+      status?: LeaveStatus
+      team?: string
+      department?: string
+      hasDocuments?: boolean
+      cutoff?: string
+      dateRange?: { start?: string; end?: string }
+    }> = {}
+    
+    Object.entries(newFilters).forEach(([key, value]) => {
+      const k = key as keyof FilterState
+      if (Array.isArray(value) && value.length > 0) {
+        apiFilters[k] = value[0]
+      } else if (!Array.isArray(value)) {
+        apiFilters[k] = value
+      }
+    })
+
+    onFilterChange(apiFilters)
   }
 
-  const filterSections = [
+  const filterSections: FilterSection[] = [
     {
       id: 'type',
       name: 'Leave Type',
@@ -94,30 +153,53 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
     }
   ]
 
+  const clearFilter = (sectionId: keyof FilterState) => {
+    const newFilters = { ...filters }
+    if (sectionId === 'dateRange') {
+      newFilters.dateRange = { start: undefined, end: undefined }
+    } else if (sectionId === 'hasDocuments') {
+      newFilters.hasDocuments = undefined
+    } else {
+      newFilters[sectionId] = []
+    }
+    setFilters(newFilters)
+    onFilterChange({ ...newFilters, [sectionId]: undefined })
+  }
+
   return (
-    <div className="bg-white w-60">
+    <div className="bg-white w-72 rounded-lg shadow-sm border border-gray-200 shrink-0">
       <div>
         <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+          <div className="flex items-center gap-2">
+            <AdjustmentsHorizontalIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
+            <span className="text-lg font-medium text-gray-900">Filters</span>
+          </div>
           <button
             type="button"
             className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50"
             onClick={() => setMobileFiltersOpen(true)}
           >
             <span className="sr-only">Open filters</span>
-            <FunnelIcon className="h-5 w-5" aria-hidden="true" />
+            <AdjustmentsHorizontalIcon className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
         <form className="hidden lg:block">
-          <div className="space-y-4 divide-y divide-gray-200">
+          <div className="space-y-2 divide-y divide-gray-200">
             {filterSections.map((section) => (
-              <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
+              <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-4">
                 {({ open }) => (
                   <>
                     <h3 className="-mx-2 -my-3 flow-root">
                       <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                        <span className="text-sm font-medium text-gray-900">{section.name}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-gray-900">{section.name}</span>
+                          {filters[section.id]?.length > 0 && (
+                            <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                              {filters[section.id].length} selected
+                            </span>
+                          )}
+                        </div>
                         <span className="ml-6 flex items-center">
                           <ChevronDownIcon
                             className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-5 w-5 transform')}
@@ -135,29 +217,32 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                                 id={`filter-${section.id}-${optionIdx}`}
                                 name={`${section.id}[]`}
                                 defaultValue={option.value}
-                                type="radio"
-                                checked={filters[section.id as keyof typeof filters] === option.value}
+                                type="checkbox"
+                                checked={filters[section.id]?.includes(option.value)}
                                 onChange={() => handleFilterChange(section.id, option.value)}
-                                className="h-4 w-4 rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]"
+                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
                               />
                               <label
                                 htmlFor={`filter-${section.id}-${optionIdx}`}
-                                className="ml-3 text-sm text-gray-600"
+                                className="ml-3 text-sm text-gray-600 hover:text-gray-900"
                               >
                                 {option.label}
                               </label>
                             </div>
                             {'count' in option && (
-                              <span className="ml-2 text-xs text-gray-500">{option.count}</span>
+                              <span className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+                                {option.count}
+                              </span>
                             )}
                           </div>
                         ))}
-                        {section.id === 'type' && (
+                        {filters[section.id]?.length > 0 && (
                           <button
                             type="button"
-                            className="text-sm text-gray-500 hover:text-gray-700 mt-2"
-                            onClick={() => handleFilterChange('type', undefined)}
+                            onClick={() => clearFilter(section.id)}
+                            className="mt-4 flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
                           >
+                            <XMarkIcon className="h-4 w-4" />
                             Clear selection
                           </button>
                         )}
@@ -168,9 +253,16 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
               </Disclosure>
             ))}
 
-            <div className="border-t border-gray-200 px-4 py-6">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Supporting Documents</h3>
-              <div className="space-y-4">
+            <div className="border-t border-gray-200 px-4 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-gray-900">Supporting Documents</h3>
+                {filters.hasDocuments !== undefined && (
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                    Active
+                  </span>
+                )}
+              </div>
+              <div className="mt-4 space-y-4">
                 <div className="flex items-center">
                   <input
                     id="has-documents"
@@ -178,9 +270,9 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                     type="radio"
                     checked={filters.hasDocuments === true}
                     onChange={() => handleFilterChange('hasDocuments', true)}
-                    className="h-4 w-4 rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]"
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
                   />
-                  <label htmlFor="has-documents" className="ml-3 text-sm text-gray-600">
+                  <label htmlFor="has-documents" className="ml-3 text-sm text-gray-600 hover:text-gray-900">
                     With documents
                   </label>
                 </div>
@@ -191,25 +283,35 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                     type="radio"
                     checked={filters.hasDocuments === false}
                     onChange={() => handleFilterChange('hasDocuments', false)}
-                    className="h-4 w-4 rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]"
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
                   />
-                  <label htmlFor="no-documents" className="ml-3 text-sm text-gray-600">
+                  <label htmlFor="no-documents" className="ml-3 text-sm text-gray-600 hover:text-gray-900">
                     Without documents
                   </label>
                 </div>
-                <button
-                  type="button"
-                  className="text-sm text-gray-500 hover:text-gray-700"
-                  onClick={() => handleFilterChange('hasDocuments', undefined)}
-                >
-                  Clear selection
-                </button>
+                {filters.hasDocuments !== undefined && (
+                  <button
+                    type="button"
+                    onClick={() => clearFilter('hasDocuments')}
+                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                    Clear selection
+                  </button>
+                )}
               </div>
             </div>
 
-            <div className="border-t border-gray-200 px-4 py-6">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Date Range</h3>
-              <div className="space-y-4">
+            <div className="border-t border-gray-200 px-4 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-gray-900">Date Range</h3>
+                {(filters.dateRange.start || filters.dateRange.end) && (
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                    Active
+                  </span>
+                )}
+              </div>
+              <div className="mt-4 space-y-4">
                 <div>
                   <label htmlFor="start-date" className="block text-sm text-gray-600 mb-1">
                     Start Date
@@ -224,7 +326,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                         start: e.target.value || undefined
                       })
                     }
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)] sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -241,18 +343,19 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                         end: e.target.value || undefined
                       })
                     }
-                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)] sm:text-sm"
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring-blue-600 sm:text-sm"
                   />
                 </div>
-                <button
-                  type="button"
-                  className="text-sm text-gray-500 hover:text-gray-700"
-                  onClick={() =>
-                    handleFilterChange('dateRange', { start: undefined, end: undefined })
-                  }
-                >
-                  Clear dates
-                </button>
+                {(filters.dateRange.start || filters.dateRange.end) && (
+                  <button
+                    type="button"
+                    onClick={() => clearFilter('dateRange')}
+                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                    Clear dates
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -328,7 +431,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                                         name={`${section.id}[]`}
                                         defaultValue={option.value}
                                         type="radio"
-                                        checked={filters[section.id as keyof typeof filters] === option.value}
+                                        checked={filters[section.id]?.includes(option.value)}
                                         onChange={() => handleFilterChange(section.id, option.value)}
                                         className="h-4 w-4 rounded border-gray-300 text-[var(--accent)] focus:ring-[var(--accent)]"
                                       />
