@@ -1,8 +1,9 @@
 import Link from 'next/link'
+import { ProfileDropdown } from './profile-dropdown'
 
 export function Navigation() {
   return (
-    <nav className="w-full bg-[var(--background)] border-b border-gray-100">
+    <nav className="w-full bg-gradient-surface backdrop-blur-sm border-b border-gray-100">
       <div className="container-width">
         <div className="flex items-center justify-between h-16">
           <Link 
@@ -25,12 +26,10 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center gap-4">
-            <Link href="/profile" className="nav-link">
-              Profile
-            </Link>
             <button className="btn-primary">
               New Leave
             </button>
+            <ProfileDropdown />
           </div>
         </div>
       </div>
