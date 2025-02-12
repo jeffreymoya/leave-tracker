@@ -12,7 +12,8 @@
     "clean": "turbo clean",
     "cache": "turbo cache",
     "graph": "turbo graph",
-    "info": "turbo info"
+    "info": "turbo info",
+    "lint:fix": "turbo run lint:fix"
   },
   "devDependencies": {
     "@playwright/test": "^1.41.0",

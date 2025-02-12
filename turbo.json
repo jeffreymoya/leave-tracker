@@ -23,6 +23,19 @@
     },
     "type-check": {
       "outputs": []
+    },
+    "lint:fix": {
+      "dependsOn": [],
+      "outputs": [],
+      "cache": false,
+      "inputs": [
+        "**/*.{ts,tsx,js,jsx}",
+        "!**/node_modules/**",
+        "!**/dist/**",
+        "!**/.next/**"
+      ],
+      "execution": "fresh",
+      "persistent": false
     }
   }
 }
