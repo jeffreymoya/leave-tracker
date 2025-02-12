@@ -95,7 +95,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
   ]
 
   return (
-    <div className="bg-white w-72">
+    <div className="bg-white w-60">
       <div>
         <div className="flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-medium text-gray-900">Filters</h2>
@@ -117,7 +117,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                   <>
                     <h3 className="-mx-2 -my-3 flow-root">
                       <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                        <span className="font-medium text-gray-900">{section.name}</span>
+                        <span className="text-sm font-medium text-gray-900">{section.name}</span>
                         <span className="ml-6 flex items-center">
                           <ChevronDownIcon
                             className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-5 w-5 transform')}
@@ -306,7 +306,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                           <>
                             <h3 className="-mx-2 -my-3 flow-root">
                               <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">{section.name}</span>
+                                <span className="text-sm font-medium text-gray-900">{section.name}</span>
                                 <span className="ml-6 flex items-center">
                                   <ChevronDownIcon
                                     className={classNames(
