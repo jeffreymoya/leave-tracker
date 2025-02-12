@@ -21,16 +21,34 @@ export function LeaveCalendar({ data }: { data: Leave[] }) {
     title: `${leave.type} - ${leave.status}`,
     start: new Date(leave.startDate),
     end: new Date(leave.endDate),
-    allDay: true
+    allDay: true,
+    resource: leave
   }))
 
   return (
-    <Calendar
-      localizer={localizer}
-      events={events}
-      className="bg-white rounded-lg border p-4 h-[600px]"
-      toolbar={true}
-      aria-label="Leave calendar"
-    />
+    <div className="card overflow-hidden p-0">
+      <Calendar
+        localizer={localizer}
+        events={events}
+        className="min-h-[600px] p-4"
+        toolbar={true}
+        aria-label="Leave calendar"
+        views={['month', 'week', 'day']}
+        defaultView="month"
+        popup
+        selectable
+        eventPropGetter={event => {
+          const leave = event.resource as Leave
+          return {
+            className: `
+              ${leave.status === 'Approved' ? 'bg-green-500 hover:bg-green-600' : ''}
+              ${leave.status === 'Rejected' ? 'bg-red-500 hover:bg-red-600' : ''}
+              ${leave.status === 'Pending' ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
+              text-white rounded-lg border-none transition-colors duration-200
+            `
+          }
+        }}
+      />
+    </div>
   )
 }

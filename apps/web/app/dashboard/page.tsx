@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 
+import { LeaveCalendar } from './_components/leaves/calendar'
+import { LeaveList } from './_components/leaves/list'
 import { useLeavesQuery } from '@/lib/api/leaves'
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
@@ -15,11 +17,11 @@ interface FilterState {
 }
 
 export default function DashboardPage() {
-  const [_view, _setView] = useState<'list' | 'calendar'>('list')
-  const [filters, _setFilters] = useState<FilterState>({})
-  const { data: leaves = [], isLoading: _isLoading, error: _error } = useLeavesQuery()
+  const [view, setView] = useState<'list' | 'calendar'>('list')
+  const [filters, setFilters] = useState<FilterState>({})
+  const { data: leaves = [], isLoading, error } = useLeavesQuery()
 
-  const _filteredData = leaves.filter(leave => {
+  const filteredData = leaves.filter(leave => {
     if (filters.type && leave.type !== filters.type) return false
     if (filters.status && leave.status !== filters.status) return false
     if (filters.dateRange?.start && new Date(leave.startDate) < new Date(filters.dateRange.start))
@@ -29,76 +31,90 @@ export default function DashboardPage() {
     return true
   })
 
-  return (
-    <div className="py-6">
-      <div className="flex flex-col gap-6">
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4">
-          <div className="flex items-center gap-4">
-            <button className="px-4 py-1.5 border rounded bg-gray-100">List</button>
-            <button className="px-4 py-1.5 border rounded hover:bg-gray-50">Calendar</button>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Leave Type</span>
-            <select className="border rounded px-2 py-1.5 text-sm bg-white">
-              <option>All Types</option>
-              <option>Vacation</option>
-              <option>Sick</option>
-              <option>Personal</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Leave Status</span>
-            <select className="border rounded px-2 py-1.5 text-sm bg-white">
-              <option>All Status</option>
-              <option>Pending</option>
-              <option>Approved</option>
-              <option>Rejected</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Leave List */}
-        <div className="flex flex-col gap-3">
-          <LeaveItem
-            type="Sick"
-            dates="1/5/2025 to 1/11/2025"
-            status="Approved"
-          />
-          <LeaveItem
-            type="Vacation"
-            dates="1/12/2025 to 1/18/2025"
-            status="Approved"
-          />
-          <LeaveItem
-            type="Sick"
-            dates="1/15/2025 to 1/17/2025"
-            status="Pending"
-          />
-          <LeaveItem
-            type="Vacation"
-            dates="1/25/2025 to 1/29/2025"
-            status="Approved"
-          />
-        </div>
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <p className="text-red-600">Failed to load leaves. Please try again later.</p>
       </div>
-    </div>
-  )
-}
+    )
+  }
 
-function LeaveItem({ type, dates, status }: { type: string; dates: string; status: string }) {
   return (
-    <div className="flex items-start gap-4">
-      <div className="font-medium">{type}</div>
-      <div className="text-gray-600">{dates}</div>
-      <div className={`
-        ${status === 'Approved' ? 'text-green-600' : ''}
-        ${status === 'Pending' ? 'text-yellow-600' : ''}
-        ${status === 'Rejected' ? 'text-red-600' : ''}
-      `}>
-        {status}
+    <div className="container py-8">
+      <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-4">
+          <h1>Leave Management</h1>
+          <p className="text-[var(--text-secondary)]">
+            Track and manage your team&apos;s leave requests
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="card">
+          <div className="flex flex-wrap gap-6">
+            <div className="flex gap-2">
+              <button
+                className={`btn-primary ${view === 'list' ? '' : '!bg-white !text-[var(--text-primary)] border border-gray-200 hover:!bg-gray-50'}`}
+                onClick={() => setView('list')}
+              >
+                List View
+              </button>
+              <button
+                className={`btn-primary ${view === 'calendar' ? '' : '!bg-white !text-[var(--text-primary)] border border-gray-200 hover:!bg-gray-50'}`}
+                onClick={() => setView('calendar')}
+              >
+                Calendar View
+              </button>
+            </div>
+            
+            <div className="flex flex-wrap gap-4">
+              <div>
+                <label htmlFor="type-select" className="label">Leave Type</label>
+                <select
+                  id="type-select"
+                  className="input"
+                  onChange={e => setFilters(prev => ({ ...prev, type: e.target.value as LeaveType }))}
+                  value={filters.type || ''}
+                >
+                  <option value="">All Types</option>
+                  <option value="Vacation">Vacation</option>
+                  <option value="Sick">Sick</option>
+                  <option value="Personal">Personal</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="status-select" className="label">Status</label>
+                <select
+                  id="status-select"
+                  className="input"
+                  onChange={e => setFilters(prev => ({ ...prev, status: e.target.value as LeaveStatus }))}
+                  value={filters.status || ''}
+                >
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        {isLoading ? (
+          <div className="card">
+            <div className="animate-pulse space-y-4">
+              <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            </div>
+          </div>
+        ) : view === 'list' ? (
+          <LeaveList data={filteredData} />
+        ) : (
+          <LeaveCalendar data={filteredData} />
+        )}
       </div>
     </div>
   )

@@ -14,27 +14,31 @@ interface FiltersProps {
 
 export function Filters({ view, onViewChange, onFilterChange }: FiltersProps) {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="flex flex-wrap gap-4 items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
       <div className="flex gap-2">
         <button
-          className={`px-4 py-2 text-sm font-medium ${
-            view === 'list'
-              ? 'bg-blue-50 text-blue-700 border-blue-200'
-              : 'text-gray-700 bg-white hover:bg-gray-50'
-          } border rounded-md`}
+          className={`px-4 py-2 text-sm font-medium rounded-lg
+            transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
+            ${
+              view === 'list'
+                ? 'bg-[var(--accent)] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
           onClick={() => onViewChange('list')}
         >
-          List
+          List View
         </button>
         <button
-          className={`px-4 py-2 text-sm font-medium ${
-            view === 'calendar'
-              ? 'bg-blue-50 text-blue-700 border-blue-200'
-              : 'text-gray-700 bg-white hover:bg-gray-50'
-          } border rounded-md`}
+          className={`px-4 py-2 text-sm font-medium rounded-lg
+            transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
+            ${
+              view === 'calendar'
+                ? 'bg-[var(--accent)] text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
           onClick={() => onViewChange('calendar')}
         >
-          Calendar
+          Calendar View
         </button>
       </div>
 
