@@ -56,17 +56,22 @@ const sampleReasons = {
   ]
 }
 
-export async function getLeaves(): Promise<Leave[]> {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 500))
-
-  return Array.from({ length: 15 }, (_, i) => {
+export async function getLeaves(filters?: {
+  type?: string
+  status?: string
+  team?: string
+  department?: string
+  hasDocuments?: boolean
+  cutoff?: string
+  dateRange?: { start?: string; end?: string }
+  leaveBalance?: string
+}): Promise<Leave[]> {
+  const leaves = Array.from({ length: 15 }, (_, i) => {
     const startDate = generateRandomDate(new Date(), new Date(2024, 11, 31))
     const endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + Math.floor(Math.random() * 7) + 1)
 
     const type = leaveTypes[Math.floor(Math.random() * leaveTypes.length)]
-
     return {
       id: `leave-${i + 1}`,
       startDate: startDate.toISOString().split('T')[0],
@@ -75,14 +80,32 @@ export async function getLeaves(): Promise<Leave[]> {
       status: leaveStatuses[Math.floor(Math.random() * leaveStatuses.length)],
       userId: filipinoNames[Math.floor(Math.random() * filipinoNames.length)],
       reason: sampleReasons[type][Math.floor(Math.random() * sampleReasons[type].length)],
-      attachments: i < 2 ? sampleAttachments[i] : undefined
+      attachments: i < 2 ? sampleAttachments[i] : undefined,
+      department: 'Engineering',
+      team: 'Frontend',
+      leaveBalance: {
+        available: i < 3 ? 10 : 0,
+        taken: 5,
+        pending: 0
+      },
+      leaveDuration: 5
     }
   })
+
+  if (filters?.leaveBalance) {
+    return leaves.filter(leave => 
+      filters.leaveBalance === 'sufficient' 
+        ? leave.leaveBalance.available >= leave.leaveDuration 
+        : leave.leaveBalance.available < leave.leaveDuration
+    )
+  }
+
+  return leaves
 }
 
 export function useLeavesQuery() {
   return useQuery({
-    queryKey: ['leaves'],
-    queryFn: getLeaves
+    queryKey: ['leaves'] as const,
+    queryFn: () => getLeaves()
   })
 }

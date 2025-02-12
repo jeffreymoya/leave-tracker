@@ -10,6 +10,13 @@ export interface Leave {
   endDate: string
   reason?: string
   userId: string
+  department?: string
+  team?: string
+  leaveBalance?: {
+    available: number
+    taken: number
+    pending: number
+  }
   attachments?: {
     id: string
     type: 'document' | 'image'

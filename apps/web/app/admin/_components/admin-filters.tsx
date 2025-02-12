@@ -15,6 +15,7 @@ interface AdminFiltersProps {
     hasDocuments?: boolean
     cutoff?: string
     dateRange?: { start?: string; end?: string }
+    leaveBalance?: string
   }) => void
   typeCounts: Record<LeaveType, number>
   statusCounts: Record<LeaveStatus, number>
@@ -39,6 +40,7 @@ interface FilterState {
     start: string | undefined
     end: string | undefined
   }
+  leaveBalance: string | undefined
 }
 
 interface FilterOption {
@@ -68,35 +70,56 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
     dateRange: {
       start: defaultStartDate,
       end: defaultEndDate
-    }
+    },
+    leaveBalance: undefined
   })
 
   const handleFilterChange = (key: keyof FilterState, value: string | boolean | { start?: string; end?: string }) => {
     const newFilters = { ...filters }
     
-    if (key === 'hasDocuments' || key === 'dateRange') {
-      newFilters[key] = value as any
-    } else {
-      const values = newFilters[key] as Array<string | LeaveType | LeaveStatus>
-      const stringValue = value as string
-      const index = values.indexOf(stringValue)
-      if (index > -1) {
-        values.splice(index, 1)
-      } else {
-        values.push(stringValue)
-      }
+    switch (key) {
+      case 'hasDocuments':
+        newFilters.hasDocuments = value as boolean
+        break
+      case 'leaveBalance':
+        newFilters.leaveBalance = value as string
+        break
+      case 'dateRange':
+        newFilters.dateRange = {
+          start: (value as { start?: string; end?: string }).start || newFilters.dateRange.start,
+          end: (value as { start?: string; end?: string }).end || newFilters.dateRange.end
+        }
+        break
+      default:
+        const values = newFilters[key] as string[]
+        const stringValue = value as string
+        const index = values.indexOf(stringValue)
+        if (index > -1) {
+          values.splice(index, 1)
+        } else {
+          values.push(stringValue)
+        }
     }
     
     setFilters(newFilters)
 
     // Convert to API format
-    const apiFilters: AdminFiltersProps['onFilterChange'] extends (filters: infer T) => any ? T : never = {}
+    const apiFilters: Partial<{
+      type?: LeaveType
+      status?: LeaveStatus
+      team?: string
+      department?: string
+      hasDocuments?: boolean
+      cutoff?: string
+      dateRange?: { start?: string; end?: string }
+      leaveBalance?: string
+    }> = {}
     
     Object.entries(newFilters).forEach(([key, value]) => {
       const k = key as keyof typeof apiFilters
       if (Array.isArray(value) && value.length > 0) {
         apiFilters[k] = value[0] as any
-      } else if (!Array.isArray(value)) {
+      } else if (!Array.isArray(value) && value !== undefined) {
         apiFilters[k] = value as any
       }
     })
@@ -105,7 +128,7 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
   }
 
   const isArrayFilter = (key: keyof FilterState): boolean => {
-    return key !== 'hasDocuments' && key !== 'dateRange'
+    return !['hasDocuments', 'dateRange', 'leaveBalance'].includes(key)
   }
 
   const getFilterLength = (filter: FilterState[keyof FilterState]): number => {
@@ -118,12 +141,58 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
     return filter ? 1 : 0
   }
 
+  const clearFilter = (filterKey: keyof FilterState) => {
+    const newFilters = { ...filters }
+    
+    switch (filterKey) {
+      case 'hasDocuments':
+      case 'leaveBalance':
+        newFilters[filterKey] = undefined
+        break
+      case 'dateRange':
+        newFilters.dateRange = { start: undefined, end: undefined }
+        break
+      default:
+        newFilters[filterKey] = []
+    }
+    
+    setFilters(newFilters)
+
+    // Create API filters without the cleared filter
+    const apiFilters: Partial<{
+      type?: LeaveType
+      status?: LeaveStatus
+      team?: string
+      department?: string
+      hasDocuments?: boolean
+      cutoff?: string
+      dateRange?: { start?: string; end?: string }
+      leaveBalance?: string
+    }> = {}
+    
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (key !== filterKey) { // Skip the cleared filter
+        const k = key as keyof typeof apiFilters
+        if (Array.isArray(value) && value.length > 0) {
+          apiFilters[k] = value[0] as any
+        } else if (!Array.isArray(value) && value !== undefined) {
+          apiFilters[k] = value as any
+        }
+      }
+    })
+
+    onFilterChange(apiFilters)
+  }
+
   const hasFilterValue = (filter: FilterState[keyof FilterState], value: string): boolean => {
     if (Array.isArray(filter)) {
       return filter.some(item => item === value)
     }
     if (typeof filter === 'boolean') {
       return value === filter.toString()
+    }
+    if (typeof filter === 'string') {
+      return filter === value
     }
     return false
   }
@@ -172,42 +241,6 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
       }))
     }
   ]
-
-  const clearFilter = (sectionId: keyof FilterState) => {
-    const newFilters = { ...filters }
-    if (sectionId === 'dateRange') {
-      newFilters.dateRange = { start: undefined, end: undefined }
-    } else if (sectionId === 'hasDocuments') {
-      newFilters.hasDocuments = undefined
-    } else {
-      newFilters[sectionId] = []
-    }
-    setFilters(newFilters)
-
-    // Create API filters with the cleared section undefined
-    const apiFilters: Partial<{
-      type?: LeaveType
-      status?: LeaveStatus
-      team?: string
-      department?: string
-      hasDocuments?: boolean
-      cutoff?: string
-      dateRange?: { start?: string; end?: string }
-    }> = {}
-    
-    Object.entries(newFilters).forEach(([key, value]) => {
-      const k = key as keyof typeof apiFilters
-      if (key === sectionId) {
-        apiFilters[k] = undefined
-      } else if (Array.isArray(value) && value.length > 0) {
-        apiFilters[k] = value[0] as any
-      } else if (!Array.isArray(value)) {
-        apiFilters[k] = value as any
-      }
-    })
-
-    onFilterChange(apiFilters)
-  }
 
   return (
     <div className="bg-white w-72 rounded-lg shadow-sm border border-gray-200 shrink-0">
@@ -453,6 +486,55 @@ export function AdminFilters({ onFilterChange, typeCounts, statusCounts }: Admin
                     <XMarkIcon className="h-4 w-4" />
                   Clear selection
                 </button>
+                )}
+              </div>
+            </div>
+
+            <div className="border-t border-gray-200 px-4 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-medium text-gray-900">Leave Balance</h3>
+                {filters.leaveBalance !== undefined && (
+                  <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/20">
+                    Active
+                  </span>
+                )}
+              </div>
+              <div className="mt-4 space-y-4">
+                <div className="flex items-center">
+                  <input
+                    id="sufficient-balance"
+                    name="leaveBalance"
+                    type="radio"
+                    checked={filters.leaveBalance === 'sufficient'}
+                    onChange={() => handleFilterChange('leaveBalance', 'sufficient')}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                  />
+                  <label htmlFor="sufficient-balance" className="ml-3 text-sm text-gray-600 hover:text-gray-900">
+                    Sufficient balance
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    id="insufficient-balance"
+                    name="leaveBalance"
+                    type="radio"
+                    checked={filters.leaveBalance === 'insufficient'}
+                    onChange={() => handleFilterChange('leaveBalance', 'insufficient')}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                  />
+                  <label htmlFor="insufficient-balance" className="ml-3 text-sm text-gray-600 hover:text-gray-900">
+                    Insufficient balance
+                  </label>
+                </div>
+                {filters.leaveBalance !== undefined && (
+                  <button
+                    type="button"
+                    onClick={() => clearFilter('leaveBalance')}
+                    className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    <XMarkIcon className="h-4 w-4" />
+                    Clear selection
+                  </button>
                 )}
               </div>
             </div>

@@ -1,4 +1,70 @@
-dashboard:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
-dashboard:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
-dashboard:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
-dashboard:1 Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.
+favicon.ico:1 
+        
+        
+       GET http://localhost:3000/favicon.ico 404 (Not Found)
+admin-filters.tsx:84 Uncaught TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at handleFilterChange (admin-filters.tsx:84:28)
+    at onChange (admin-filters.tsx:478:37)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:20498:14)
+    at Object.invokeGuardedCallbackImpl (react-dom.development.js:20547:16)
+    at invokeGuardedCallback (react-dom.development.js:20622:29)
+    at invokeGuardedCallbackAndCatchFirstError (react-dom.development.js:20636:25)
+    at executeDispatch (react-dom.development.js:31986:3)
+    at processDispatchQueueItemsInOrder (react-dom.development.js:32018:7)
+    at processDispatchQueue (react-dom.development.js:32031:5)
+    at dispatchEventsForPlugins (react-dom.development.js:32042:3)
+    at eval (react-dom.development.js:32232:12)
+    at batchedUpdates$1 (react-dom.development.js:24843:12)
+    at batchedUpdates (react-dom.development.js:28703:12)
+    at dispatchEventForPluginEventSystem (react-dom.development.js:32231:3)
+    at dispatchEvent (react-dom.development.js:29999:5)
+    at dispatchDiscreteEvent (react-dom.development.js:29970:5)
+handleFilterChange @ admin-filters.tsx:84
+onChange @ admin-filters.tsx:478
+callCallback @ react-dom.development.js:20498
+invokeGuardedCallbackImpl @ react-dom.development.js:20547
+invokeGuardedCallback @ react-dom.development.js:20622
+invokeGuardedCallbackAndCatchFirstError @ react-dom.development.js:20636
+executeDispatch @ react-dom.development.js:31986
+processDispatchQueueItemsInOrder @ react-dom.development.js:32018
+processDispatchQueue @ react-dom.development.js:32031
+dispatchEventsForPlugins @ react-dom.development.js:32042
+eval @ react-dom.development.js:32232
+batchedUpdates$1 @ react-dom.development.js:24843
+batchedUpdates @ react-dom.development.js:28703
+dispatchEventForPluginEventSystem @ react-dom.development.js:32231
+dispatchEvent @ react-dom.development.js:29999
+dispatchDiscreteEvent @ react-dom.development.js:29970
+react-dom.development.js:20657 Uncaught TypeError: Cannot read properties of undefined (reading 'indexOf')
+    at handleFilterChange (admin-filters.tsx:84:28)
+    at onChange (admin-filters.tsx:478:37)
+    at HTMLUnknownElement.callCallback (react-dom.development.js:20498:14)
+    at Object.invokeGuardedCallbackImpl (react-dom.development.js:20547:16)
+    at invokeGuardedCallback (react-dom.development.js:20622:29)
+    at invokeGuardedCallbackAndCatchFirstError (react-dom.development.js:20636:25)
+    at executeDispatch (react-dom.development.js:31986:3)
+    at processDispatchQueueItemsInOrder (react-dom.development.js:32018:7)
+    at processDispatchQueue (react-dom.development.js:32031:5)
+    at dispatchEventsForPlugins (react-dom.development.js:32042:3)
+    at eval (react-dom.development.js:32232:12)
+    at batchedUpdates$1 (react-dom.development.js:24843:12)
+    at batchedUpdates (react-dom.development.js:28703:12)
+    at dispatchEventForPluginEventSystem (react-dom.development.js:32231:3)
+    at dispatchEvent (react-dom.development.js:29999:5)
+    at dispatchDiscreteEvent (react-dom.development.js:29970:5)
+handleFilterChange @ admin-filters.tsx:84
+onChange @ admin-filters.tsx:478
+callCallback @ react-dom.development.js:20498
+invokeGuardedCallbackImpl @ react-dom.development.js:20547
+invokeGuardedCallback @ react-dom.development.js:20622
+invokeGuardedCallbackAndCatchFirstError @ react-dom.development.js:20636
+executeDispatch @ react-dom.development.js:31986
+processDispatchQueueItemsInOrder @ react-dom.development.js:32018
+processDispatchQueue @ react-dom.development.js:32031
+dispatchEventsForPlugins @ react-dom.development.js:32042
+eval @ react-dom.development.js:32232
+batchedUpdates$1 @ react-dom.development.js:24843
+batchedUpdates @ react-dom.development.js:28703
+dispatchEventForPluginEventSystem @ react-dom.development.js:32231
+dispatchEvent @ react-dom.development.js:29999
+dispatchDiscreteEvent @ react-dom.development.js:29970
