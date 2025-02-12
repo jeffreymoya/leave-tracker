@@ -7,27 +7,31 @@ interface ViewSwitcherProps {
 
 export function ViewSwitcher({ view, onViewChange }: ViewSwitcherProps) {
   return (
-    <nav className="-mb-px flex space-x-8" aria-label="View">
+    <div className="flex gap-2">
       <button
+        className={`px-4 py-2 text-sm font-medium rounded-lg
+          transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
+          ${
+            view === 'list'
+              ? 'bg-[var(--accent)] text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+          }`}
         onClick={() => onViewChange('list')}
-        className={`${
-          view === 'list'
-            ? 'border-orange-500 text-orange-600'
-            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-        } whitespace-nowrap border-b-2 py-4 px-1 text-base font-medium`}
       >
-        List View
+        Card View
       </button>
       <button
+        className={`px-4 py-2 text-sm font-medium rounded-lg
+          transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2
+          ${
+            view === 'calendar'
+              ? 'bg-[var(--accent)] text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+          }`}
         onClick={() => onViewChange('calendar')}
-        className={`${
-          view === 'calendar'
-            ? 'border-orange-500 text-orange-600'
-            : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-        } whitespace-nowrap border-b-2 py-4 px-1 text-base font-medium`}
       >
         Calendar View
       </button>
-    </nav>
+    </div>
   )
 } 

@@ -1,9 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 import { DashboardContent } from './_components/dashboard-content'
-import { FilterDropdown } from './_components/filter-dropdown'
+import { Filters } from './_components/filters'
 import { ViewSwitcher } from './_components/view-switcher'
 import { useLeavesQuery } from '@/lib/api/leaves'
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
@@ -21,6 +21,22 @@ export default function DashboardPage() {
   const [view, setView] = useState<'list' | 'calendar'>('list')
   const [filters, setFilters] = useState<FilterState>({})
   const { data: leaves = [], isLoading, error } = useLeavesQuery()
+
+  const typeCounts = useMemo(() => {
+    const counts: Record<LeaveType, number> = { Vacation: 0, Sick: 0, Personal: 0 }
+    leaves.forEach(leave => {
+      counts[leave.type]++
+    })
+    return counts
+  }, [leaves])
+
+  const statusCounts = useMemo(() => {
+    const counts: Record<LeaveStatus, number> = { Pending: 0, Approved: 0, Rejected: 0 }
+    leaves.forEach(leave => {
+      counts[leave.status]++
+    })
+    return counts
+  }, [leaves])
 
   const filteredData = leaves.filter(leave => {
     if (filters.type && leave.type !== filters.type) return false
@@ -43,25 +59,13 @@ export default function DashboardPage() {
   return (
     <div className="container py-8">
       <div className="flex flex-col gap-8">
-        <div className="border-b border-gray-200">
-          <div className="flex flex-col gap-4">
-            <ViewSwitcher view={view} onViewChange={setView} />
-
-            <div className="flex items-center gap-6 pb-4">
-              <FilterDropdown
-                label="Type"
-                value={filters.type}
-                options={['Vacation', 'Sick', 'Personal']}
-                onChange={(value) => setFilters(prev => ({ ...prev, type: value as LeaveType | undefined }))}
-              />
-              <FilterDropdown
-                label="Status"
-                value={filters.status}
-                options={['Pending', 'Approved', 'Rejected']}
-                onChange={(value) => setFilters(prev => ({ ...prev, status: value as LeaveStatus | undefined }))}
-              />
-            </div>
-          </div>
+        <div className="flex flex-col gap-4">
+          <ViewSwitcher view={view} onViewChange={setView} />
+          <Filters
+            onFilterChange={setFilters}
+            typeCounts={typeCounts}
+            statusCounts={statusCounts}
+          />
         </div>
 
         <DashboardContent
