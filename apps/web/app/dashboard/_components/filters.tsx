@@ -2,8 +2,9 @@
 
 import { Listbox } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import type { LeaveType, LeaveStatus } from '@/types/leaves'
 import { useState } from 'react'
+
+import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
 interface FiltersProps {
   onFilterChange: (filters: {

@@ -3,8 +3,8 @@
 import { usePathname } from 'next/navigation'
 
 import Navigation from './navigation'
-import { FloatingActionButton } from '../dashboard/_components/fab'
 import { Providers } from './providers'
+import { FloatingActionButton } from '../dashboard/_components/fab'
 
 export function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()

@@ -2,6 +2,7 @@
 
 import { LoadingSkeleton } from '@/app/dashboard/_components/loading-skeleton'
 import type { Leave } from '@/types/leaves'
+
 import { AdminLeaveList } from './admin-leave-list'
 
 interface AdminContentProps {

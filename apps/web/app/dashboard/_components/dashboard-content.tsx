@@ -1,9 +1,10 @@
 'use client'
 
+import type { Leave } from '@/types/leaves'
+
 import { LeaveCalendar } from './leaves/calendar'
 import { LeaveList } from './leaves/list'
 import { LoadingSkeleton } from './loading-skeleton'
-import type { Leave } from '@/types/leaves'
 
 interface DashboardContentProps {
   isLoading: boolean

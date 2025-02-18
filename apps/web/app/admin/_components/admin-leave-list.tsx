@@ -1,11 +1,14 @@
 'use client'
 
-import { useState, Fragment } from 'react'
-import type { MouseEvent, ChangeEvent } from 'react'
+import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon, XMarkIcon, ArchiveBoxIcon } from '@heroicons/react/20/solid'
 import { DocumentIcon } from '@heroicons/react/24/outline'
-import { Dialog, Transition } from '@headlessui/react'
+import { useState, Fragment } from 'react'
+
 import type { Leave } from '@/types/leaves'
+
+import type { MouseEvent, ChangeEvent } from 'react'
+
 
 interface AdminLeaveListProps {
   data: Leave[]
@@ -191,8 +194,8 @@ export function AdminLeaveList({ data }: AdminLeaveListProps) {
   }
 
   const sortedData = [...data].sort((a, b) => {
-    const aValue = a[sortColumn]
-    const bValue = b[sortColumn]
+    const aValue = a[sortColumn] || ''
+    const bValue = b[sortColumn] || ''
     const direction = sortDirection === 'asc' ? 1 : -1
 
     if (aValue < bValue) return -1 * direction

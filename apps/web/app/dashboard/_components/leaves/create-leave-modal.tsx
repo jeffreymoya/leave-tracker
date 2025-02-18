@@ -1,9 +1,9 @@
 'use client'
 
-import { Dialog, Transition } from '@headlessui/react'
-import { CalendarDaysIcon, DocumentTextIcon, UserIcon } from '@heroicons/react/24/outline'
-import { Fragment, useState, useEffect } from 'react'
-import { Combobox } from '@headlessui/react'
+import { Dialog, Transition , Combobox } from '@headlessui/react'
+import { UserIcon } from '@heroicons/react/24/outline'
+import { Fragment, useState } from 'react'
+
 import type { LeaveType } from '@/types/leaves'
 
 const mockSupervisors = [

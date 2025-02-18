@@ -2,11 +2,12 @@
 
 import { useState, useMemo } from 'react'
 
+import { useLeavesQuery } from '@/lib/api/leaves'
+import type { LeaveType, LeaveStatus } from '@/types/leaves'
+
 import { DashboardContent } from './_components/dashboard-content'
 import { Filters } from './_components/filters'
 import { ViewSwitcher } from './_components/view-switcher'
-import { useLeavesQuery } from '@/lib/api/leaves'
-import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
 interface FilterState {
   type?: LeaveType

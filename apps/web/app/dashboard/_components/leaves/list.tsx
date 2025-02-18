@@ -10,12 +10,12 @@ import {
   TrashIcon,
   UserIcon,
 } from '@heroicons/react/24/outline'
-import Link from 'next/link'
 import { useState } from 'react'
 
 import type { Leave } from '@/types/leaves'
-import { EditLeaveModal } from './edit-leave-modal'
+
 import { DeleteLeaveModal } from './delete-leave-modal'
+import { EditLeaveModal } from './edit-leave-modal'
 
 function getLeaveTypeIcon(type: Leave['type']) {
   switch (type) {

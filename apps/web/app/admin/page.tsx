@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { AdminContent } from './_components/admin-content'
-import { AdminFilters } from './_components/admin-filters'
+
 import { useLeavesQuery } from '@/lib/api/leaves'
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
+
+import { AdminContent } from './_components/admin-content'
+import { AdminFilters } from './_components/admin-filters'
 
 interface FilterState {
   type?: LeaveType

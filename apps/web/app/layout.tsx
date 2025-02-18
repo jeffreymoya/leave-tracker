@@ -1,7 +1,6 @@
 import { Inter, Open_Sans } from 'next/font/google'
 
 import { LayoutContent } from './_components/layout-content'
-import { Providers } from './_components/providers'
 import './globals.css'
 
 const inter = Inter({
