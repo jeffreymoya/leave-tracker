@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --primary: hsl(220 14% 25%);    /* Navy Blue */
+  --primary: hsl(220, 13%, 9%);    /* Navy Blue */
   --primary-hover: hsl(220 14% 20%);
-  --accent: hsl(210 12% 70%);     /* Soft Slate */
-  --accent-hover: hsl(210 12% 60%);
+  --accent: #ed6b06;     /* Soft Slate */
+  --accent-hover: hsl(25 95% 55%);  /* Lighter shade of ed6b06 */
   --destructive: hsl(357 60% 40%); /* Maroon */
   --destructive-hover: hsl(357 60% 35%);
   --text-primary: hsl(220 14% 25%);
@@ -18,7 +18,7 @@
 
 @layer base {
   html {
-    font-size: 16px;
+    font-size: 14px;
     @apply scroll-smooth;
   }
 
@@ -48,11 +48,11 @@
   .btn {
     @apply inline-flex items-center gap-2 px-4 py-2 rounded-md 
            border border-gray-200 bg-white text-gray-700 
-           transition-all duration-200 text-sm font-normal
+           transition-transform duration-200 text-sm font-normal
            focus:outline-none focus:ring-2 focus:ring-gray-200
            disabled:opacity-50 disabled:cursor-not-allowed
            shadow-sm hover:shadow-md hover:border-gray-300
-           hover:-translate-y-0.5;
+           hover:-translate-y-[1px];
   }
 
   .btn-primary {
@@ -66,8 +66,9 @@
   }
 
   .btn-destructive {
-    @apply hover:bg-red-50 hover:text-red-700 hover:border-red-200
-           focus:ring-red-100;
+    @apply bg-[var(--destructive)] text-white border-[var(--destructive)]
+           hover:bg-[var(--destructive-hover)] hover:border-[var(--destructive-hover)]
+           focus:ring-[color:var(--destructive)] focus:ring-opacity-20;
   }
 
   .nav-link {

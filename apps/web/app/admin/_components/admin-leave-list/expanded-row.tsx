@@ -11,7 +11,7 @@ interface ExpandedRowProps {
 
 export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: ExpandedRowProps) {
   return (
-    <tr className="bg-orange-50/50">
+    <tr className="bg-gray-50">
       <td colSpan={8} className="px-4 py-3">
         <div className="space-y-3">
           <dl className="grid grid-cols-4 gap-x-4 gap-y-1 text-sm">
@@ -50,7 +50,7 @@ export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: E
           <div className="flex justify-end gap-2">
             <button
               type="button"
-              className="btn btn-primary"
+              className="btn btn-secondary"
               onClick={onApprove}
             >
               <CheckIcon className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: E
             </button>
             <button
               type="button"
-              className="btn btn-destructive"
+              className="btn btn-secondary"
               onClick={onReject}
             >
               <XMarkIcon className="h-3.5 w-3.5" />
@@ -80,7 +80,7 @@ export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: E
             {(leave.leaveBalance?.available ?? 0) === 0 && (
               <button
                 type="button"
-                className="btn-destructive text-sm"
+                className="btn btn-destructive text-sm"
                 onClick={onMarkAsDeduction}
               >
                 Mark as Deduction

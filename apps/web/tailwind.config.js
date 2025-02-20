@@ -12,7 +12,7 @@ module.exports = {
         'primary-black': themeColors.cssVariables['--primary-black']
       },
       fontFamily: {
-        sans: ['var(--font-open-sans)', 'var(--font-inter)', 'system-ui', 'sans-serif']
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif']
       }
     }
   },

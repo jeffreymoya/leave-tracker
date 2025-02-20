@@ -1,9 +1,12 @@
 'use client'
 
+import { Open_Sans } from 'next/font/google'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { ProfileDropdown } from './profile-dropdown'
+
+const openSans = Open_Sans({ subsets: ['latin'] })
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -15,9 +18,9 @@ export default function Navigation() {
         <Link 
           id="header-logo"
           href="/" 
-          className="font-sans font-light text-[var(--accent)] text-4xl hover:text-[var(--accent-hover)] 
+          className={`${openSans.className} font-light text-[var(--accent)] text-4xl hover:text-[var(--accent-hover)] 
                      transition-colors flex-shrink-0 focus:outline-none focus:ring-2 
-                     focus:ring-[var(--accent)] focus:ring-offset-2 rounded-lg px-2"
+                     focus:ring-[var(--accent)] focus:ring-offset-2 rounded-lg px-2`}
         >
           SYNPH Leave Tracker
         </Link>
