@@ -163,7 +163,7 @@ export function EditLeaveModal({ isOpen, onClose, leave, onSave }: EditLeaveModa
                     </button>
                     <button
                       type="submit"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--accent-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
+                      className="btn-primary"
                     >
                       Save Changes
                     </button>

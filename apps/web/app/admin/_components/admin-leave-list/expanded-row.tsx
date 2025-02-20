@@ -50,7 +50,7 @@ export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: E
           <div className="flex justify-end gap-2">
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-green-50 hover:text-green-600 hover:ring-green-100 transition-colors"
+              className="btn btn-primary"
               onClick={onApprove}
             >
               <CheckIcon className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: E
             </button>
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-red-50 hover:text-red-600 hover:ring-red-100 transition-colors"
+              className="btn btn-destructive"
               onClick={onReject}
             >
               <XMarkIcon className="h-3.5 w-3.5" />
@@ -66,21 +66,21 @@ export function ExpandedRow({ leave, onApprove, onReject, onMarkAsDeduction }: E
             </button>
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100 transition-colors"
+              className="btn btn-secondary"
             >
               <ArchiveBoxIcon className="h-3.5 w-3.5" />
               Archive
             </button>
             <button
               type="button"
-              className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100 transition-colors"
+              className="btn btn-secondary"
             >
               Send Email
             </button>
             {(leave.leaveBalance?.available ?? 0) === 0 && (
               <button
                 type="button"
-                className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                className="btn-destructive text-sm"
                 onClick={onMarkAsDeduction}
               >
                 Mark as Deduction

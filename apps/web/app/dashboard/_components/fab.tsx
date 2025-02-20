@@ -11,11 +11,7 @@ export function FloatingActionButton() {
   return (
     <div className="fixed bottom-6 right-8 lg:right-[calc((100vw-1280px)/2+5rem)] transition-all duration-200">
       <button
-        className="p-4 bg-[var(--accent)] text-white rounded-full shadow-lg 
-                   hover:bg-[var(--accent-hover)] hover:scale-125 active:scale-95
-                   transition-all duration-200 h-14 w-14 
-                   flex items-center justify-center group relative
-                   focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
+        className="btn btn-primary !rounded-full !p-0 h-14 w-14"
         data-testid="fab-new-request"
         aria-label="Create new leave request"
         onClick={() => setIsModalOpen(true)}

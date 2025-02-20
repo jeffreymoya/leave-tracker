@@ -7,11 +7,7 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({ selectedCount, onApprove, onReject }: ActionButtonsProps) {
-  const buttonClassName = `w-28 inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 py-1.5 text-sm font-medium ring-1 ring-inset transition-colors ${
-    selectedCount === 0
-      ? 'bg-white text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
-      : 'bg-gray-50 text-gray-700 ring-gray-200 hover:bg-orange-50 hover:text-orange-600 hover:ring-orange-100'
-  } disabled:opacity-50 disabled:cursor-not-allowed`
+  const buttonClassName = "btn btn-secondary"
 
   return (
     <div className="mb-6 flex gap-2">
