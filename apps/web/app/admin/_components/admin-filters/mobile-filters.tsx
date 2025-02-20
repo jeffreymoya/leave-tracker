@@ -1,6 +1,7 @@
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment } from 'react'
+import { motion } from 'framer-motion'
 
 import { classNames, hasFilterValue } from './admin-filters.utils'
 
@@ -30,7 +31,12 @@ export function MobileFilters({ isOpen, onClose, filterSections, filters, onFilt
           <div className="fixed inset-0 bg-black bg-opacity-25" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-40 flex">
+        <motion.div 
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.1}
+          className="fixed inset-0 z-40 flex"
+        >
           <Transition.Child
             as={Fragment}
             enter="transition ease-in-out duration-300 transform"
@@ -111,7 +117,7 @@ export function MobileFilters({ isOpen, onClose, filterSections, filters, onFilt
               </form>
             </Dialog.Panel>
           </Transition.Child>
-        </div>
+        </motion.div>
       </Dialog>
     </Transition.Root>
   )

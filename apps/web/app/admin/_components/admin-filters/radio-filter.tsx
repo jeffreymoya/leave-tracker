@@ -1,4 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { motion } from 'framer-motion'
 
 import type { FilterState } from './admin-filters.utils'
 
@@ -9,13 +10,14 @@ interface RadioFilterProps {
   filters: FilterState
   onFilterChange: (key: keyof FilterState, value: string | boolean) => void
   onClearFilter: (key: keyof FilterState) => void
+  variants?: any
 }
 
-export function RadioFilter({ id, name, options, filters, onFilterChange, onClearFilter }: RadioFilterProps) {
+export function RadioFilter({ id, name, options, filters, onFilterChange, onClearFilter, variants }: RadioFilterProps) {
   const value = filters[id]
 
   return (
-    <div className="border-t border-gray-200 px-4 py-4">
+    <motion.div variants={variants} className="px-4 py-4">
       <div className="flex items-center justify-between">
         <h3 className="text-sm font-medium text-gray-900">{name}</h3>
         {value !== undefined && (
@@ -54,6 +56,6 @@ export function RadioFilter({ id, name, options, filters, onFilterChange, onClea
           </button>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 } 

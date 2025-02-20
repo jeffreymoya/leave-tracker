@@ -4,6 +4,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { UserCircleIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { Fragment } from 'react'
+import { motion } from 'framer-motion'
 
 export function ProfileDropdown({ _open }: { _open: boolean }) {
   return (
@@ -32,6 +33,10 @@ export function ProfileDropdown({ _open }: { _open: boolean }) {
               className="absolute right-0 mt-2 w-48 origin-top-right bg-white rounded-lg 
                          shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none
                          divide-y divide-gray-100"
+              as={motion.div}
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 300 }}
             >
               <div className="px-1 py-1">
                 <Menu.Item>

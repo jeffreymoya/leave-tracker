@@ -2,6 +2,7 @@
 
 import { PlusIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 
 import { CreateLeaveModal } from './leaves/create-leave-modal'
 
@@ -10,7 +11,9 @@ export function FloatingActionButton() {
 
   return (
     <div className="fixed bottom-6 right-8 lg:right-[calc((100vw-1280px)/2+5rem)] transition-all duration-200">
-      <button
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         className="btn btn-primary !rounded-full !p-0 h-14 w-14"
         data-testid="fab-new-request"
         aria-label="Create new leave request"
@@ -20,7 +23,7 @@ export function FloatingActionButton() {
         <span className="absolute -top-12 left-1/2 -translate-x-1/2 bg-white text-gray-900 px-3 py-1.5 rounded text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-lg before:content-[''] before:absolute before:top-full before:left-1/2 before:-translate-x-1/2 before:border-8 before:border-transparent before:border-t-white font-sans">
           Create new leave request
         </span>
-      </button>
+      </motion.button>
 
       <CreateLeaveModal
         isOpen={isModalOpen}

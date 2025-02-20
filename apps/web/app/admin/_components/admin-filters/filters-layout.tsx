@@ -1,4 +1,5 @@
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
+import { motion } from 'framer-motion'
 
 import { DateRangeFilter } from './date-range-filter'
 import { MobileFilters } from './mobile-filters'
@@ -27,7 +28,12 @@ export function FiltersLayout({
   onMobileClose
 }: FiltersLayoutProps) {
   return (
-    <div className="bg-white w-72 rounded-lg shadow-sm border border-gray-200 shrink-0">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+      className="bg-white w-72 rounded-lg shadow-sm border border-gray-200 shrink-0"
+    >
       <div>
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
@@ -45,11 +51,23 @@ export function FiltersLayout({
         </div>
 
         <form className="hidden lg:block">
-          <div className="space-y-2 divide-y divide-gray-200">
+          <motion.div 
+            className="space-y-2 divide-y divide-gray-200"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+              hidden: {}
+            }}
+          >
             <DateRangeFilter
               filters={filters}
               onFilterChange={onFilterChange}
               onClearFilter={onClearFilter}
+              variants={{
+                visible: { opacity: 1, y: 0 },
+                hidden: { opacity: 0, y: -10 }
+              }}
             />
 
             {filterSections.map((section) => (
@@ -59,6 +77,10 @@ export function FiltersLayout({
                 filters={filters}
                 onFilterChange={onFilterChange}
                 onClearFilter={onClearFilter}
+                variants={{
+                  visible: { opacity: 1, y: 0 },
+                  hidden: { opacity: 0, y: -10 }
+                }}
               />
             ))}
 
@@ -72,6 +94,10 @@ export function FiltersLayout({
               filters={filters}
               onFilterChange={onFilterChange}
               onClearFilter={onClearFilter}
+              variants={{
+                visible: { opacity: 1, y: 0 },
+                hidden: { opacity: 0, y: -10 }
+              }}
             />
 
             <RadioFilter
@@ -84,8 +110,12 @@ export function FiltersLayout({
               filters={filters}
               onFilterChange={onFilterChange}
               onClearFilter={onClearFilter}
+              variants={{
+                visible: { opacity: 1, y: 0 },
+                hidden: { opacity: 0, y: -10 }
+              }}
             />
-          </div>
+          </motion.div>
         </form>
       </div>
 
@@ -96,6 +126,6 @@ export function FiltersLayout({
         filters={filters}
         onFilterChange={onFilterChange}
       />
-    </div>
+    </motion.div>
   )
 } 

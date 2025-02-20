@@ -1,6 +1,7 @@
 'use client'
 
 import { Fragment } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 import type { Leave } from '@/types/leaves'
 
@@ -52,17 +53,21 @@ export function LeaveListLayout({
         onApprove={() => onApprove(Array.from(selectedLeaves))}
         onReject={() => onReject(Array.from(selectedLeaves))}
       />
+      
       <div className="flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle">
-            <table className="min-w-full divide-y divide-gray-300">
-              <TableHeader
-                selectedCount={selectedLeaves.size}
-                totalCount={data.length}
-                onSelectAll={onSelectAll}
-                onSort={onSort}
-              />
-              <tbody className="divide-y divide-gray-200">
+            {/* Header */}
+            <TableHeader
+              selectedCount={selectedLeaves.size}
+              totalCount={data.length}
+              onSelectAll={onSelectAll}
+              onSort={onSort}
+            />
+
+            {/* List Container */}
+            <div className="bg-white shadow ring-1 ring-black ring-opacity-5 rounded-lg overflow-hidden">
+              <AnimatePresence initial={false} mode="sync">
                 {data.map((leave) => (
                   <Fragment key={leave.id}>
                     <LeaveRow
@@ -72,21 +77,45 @@ export function LeaveListLayout({
                       onSelect={(e) => onSelectLeave(e, leave.id)}
                       onClick={() => onRowClick(leave.id)}
                     />
+                    
                     {expandedRow === leave.id && (
-                      <ExpandedRow
-                        leave={leave}
-                        onApprove={() => onApprove([leave.id])}
-                        onReject={() => onReject([leave.id])}
-                        onMarkAsDeduction={() => onMarkAsDeduction(leave.id)}
-                      />
+                      <motion.div
+                        key={`expanded-${leave.id}`}
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        animate={{
+                          opacity: 1,
+                          scaleY: 1,
+                          transition: { 
+                            duration: 0.3,
+                            ease: [0.16, 1, 0.3, 1] // Spring-like curve
+                          }
+                        }}
+                        exit={{
+                          opacity: 0,
+                          scaleY: 0,
+                          transition: {
+                            duration: 0.2,
+                            ease: "easeIn"
+                          }
+                        }}
+                        style={{ originY: 0 }}
+                      >
+                        <ExpandedRow
+                          leave={leave}
+                          onApprove={() => onApprove([leave.id])}
+                          onReject={() => onReject([leave.id])}
+                          onMarkAsDeduction={() => onMarkAsDeduction(leave.id)}
+                        />
+                      </motion.div>
                     )}
                   </Fragment>
                 ))}
-              </tbody>
-            </table>
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </div>
+
       {confirmDialog && (
         <ConfirmDialog
           isOpen={confirmDialog.isOpen}
