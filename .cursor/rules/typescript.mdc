@@ -1,0 +1,9 @@
+---
+description: apply this rule to typescript files
+globs: *.tsx,*.ts
+---
+
+# Apply the following rules
+
+- Make sure to follow the project's eslint configuration
+- Make sure to follow the project's prettier configuration
