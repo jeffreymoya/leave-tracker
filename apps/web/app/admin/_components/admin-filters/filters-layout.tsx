@@ -1,9 +1,11 @@
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline'
-import type { FilterState, FilterSection } from './admin-filters.utils'
+
 import { DateRangeFilter } from './date-range-filter'
 import { MobileFilters } from './mobile-filters'
 import { RadioFilter } from './radio-filter'
 import { SectionFilter } from './section-filter'
+
+import type { FilterState, FilterSection } from './admin-filters.utils'
 
 interface FiltersLayoutProps {
   filters: FilterState

@@ -1,5 +1,4 @@
 import { CalendarDaysIcon, UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
-import type { Leave } from '@/types/leaves'
 
 interface LeaveCardContentProps {
   startDate: string

@@ -1,4 +1,5 @@
 import { ChevronUpDownIcon } from '@heroicons/react/20/solid'
+
 import type { Leave } from '@/types/leaves'
 
 interface TableHeaderProps {

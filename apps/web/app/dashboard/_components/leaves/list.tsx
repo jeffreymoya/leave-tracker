@@ -1,6 +1,7 @@
 'use client'
 
 import type { Leave } from '@/types/leaves'
+
 import { LeaveCard } from './leave-card'
 
 interface LeaveListProps {

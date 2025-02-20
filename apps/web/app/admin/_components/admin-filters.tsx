@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
-import { FiltersLayout } from './admin-filters/filters-layout'
 import {
   type FilterState,
   getDefaultDates,
@@ -13,6 +12,7 @@ import {
   getClearedFilters,
   convertToApiFilters
 } from './admin-filters/admin-filters.utils'
+import { FiltersLayout } from './admin-filters/filters-layout'
 
 interface AdminFiltersProps {
   onFilterChange: (filters: {

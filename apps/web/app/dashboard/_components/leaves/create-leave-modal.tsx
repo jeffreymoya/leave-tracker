@@ -29,7 +29,7 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [reason, setReason] = useState('')
-  const [attachments, setAttachments] = useState<File[]>([])
+  const [_attachments, setAttachments] = useState<File[]>([])
   const [supervisor, setSupervisor] = useState('Miguel Ramos') // Default supervisor
   const [query, setQuery] = useState('')
 

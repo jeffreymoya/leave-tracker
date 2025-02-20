@@ -1,7 +1,9 @@
 import { Disclosure } from '@headlessui/react'
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import type { FilterState, FilterSection } from './admin-filters.utils'
+
 import { classNames, getFilterLength, hasFilterValue } from './admin-filters.utils'
+
+import type { FilterState, FilterSection } from './admin-filters.utils'
 
 interface SectionFilterProps {
   section: FilterSection

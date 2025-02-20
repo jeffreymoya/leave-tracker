@@ -17,5 +17,23 @@ export function DashboardContent({ isLoading, view, data }: DashboardContentProp
     return <LoadingSkeleton />
   }
 
-  return view === 'list' ? <LeaveList data={data} /> : <LeaveCalendar data={data} />
+  const handleEdit = (leave: Leave) => {
+    // TODO: Implement edit functionality
+    console.log('Edit leave:', leave)
+  }
+
+  const handleDelete = (leave: Leave) => {
+    // TODO: Implement delete functionality
+    console.log('Delete leave:', leave)
+  }
+
+  return view === 'list' ? (
+    <LeaveList
+      leaves={data}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+    />
+  ) : (
+    <LeaveCalendar data={data} />
+  )
 } 

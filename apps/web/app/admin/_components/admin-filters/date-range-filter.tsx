@@ -1,6 +1,8 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import type { FilterState } from './admin-filters.utils'
+
 import { classNames } from './admin-filters.utils'
+
+import type { FilterState } from './admin-filters.utils'
 
 interface DateRangeFilterProps {
   filters: FilterState

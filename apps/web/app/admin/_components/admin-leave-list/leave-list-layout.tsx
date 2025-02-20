@@ -14,8 +14,8 @@ import type { ConfirmDialogConfig } from './admin-leave-list.utils'
 
 interface LeaveListLayoutProps {
   data: Leave[]
-  sortColumn: keyof Leave
-  sortDirection: 'asc' | 'desc'
+  _sortColumn: keyof Leave
+  _sortDirection: 'asc' | 'desc'
   selectedLeaves: Set<string>
   expandedRow: string | null
   confirmDialog: ConfirmDialogConfig | null
@@ -31,8 +31,8 @@ interface LeaveListLayoutProps {
 
 export function LeaveListLayout({
   data,
-  sortColumn,
-  sortDirection,
+  _sortColumn,
+  _sortDirection,
   selectedLeaves,
   expandedRow,
   confirmDialog,
@@ -68,7 +68,7 @@ export function LeaveListLayout({
                     <LeaveRow
                       leave={leave}
                       isSelected={selectedLeaves.has(leave.id)}
-                      isExpanded={expandedRow === leave.id}
+                      _isExpanded={expandedRow === leave.id}
                       onSelect={(e) => onSelectLeave(e, leave.id)}
                       onClick={() => onRowClick(leave.id)}
                     />

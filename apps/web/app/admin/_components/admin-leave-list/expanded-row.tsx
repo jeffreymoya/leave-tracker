@@ -1,4 +1,5 @@
 import { CheckIcon, XMarkIcon, ArchiveBoxIcon } from '@heroicons/react/20/solid'
+
 import type { Leave } from '@/types/leaves'
 
 interface ExpandedRowProps {

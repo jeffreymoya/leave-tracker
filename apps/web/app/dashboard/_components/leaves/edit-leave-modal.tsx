@@ -17,7 +17,7 @@ export function EditLeaveModal({ isOpen, onClose, leave, onSave }: EditLeaveModa
   const [startDate, setStartDate] = useState(leave.startDate)
   const [endDate, setEndDate] = useState(leave.endDate)
   const [reason, setReason] = useState(leave.reason || '')
-  const [attachments, setAttachments] = useState<File[]>([])
+  const [_attachments, setAttachments] = useState<File[]>([])
 
   useEffect(() => {
     setType(leave.type)

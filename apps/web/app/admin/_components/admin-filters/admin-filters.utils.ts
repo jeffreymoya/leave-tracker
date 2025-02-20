@@ -132,9 +132,13 @@ export function convertToApiFilters(filters: FilterState, excludeKey?: keyof Fil
     if (key !== excludeKey) {
       const k = key as keyof typeof apiFilters
       if (Array.isArray(value) && value.length > 0) {
-        apiFilters[k] = value[0] as any
+        if (k === 'type') apiFilters[k] = value[0] as LeaveType
+        else if (k === 'status') apiFilters[k] = value[0] as LeaveStatus
+        else if (k === 'team' || k === 'department' || k === 'cutoff') apiFilters[k] = value[0]
       } else if (!Array.isArray(value) && value !== undefined) {
-        apiFilters[k] = value as any
+        if (k === 'hasDocuments') apiFilters[k] = value as boolean
+        else if (k === 'dateRange') apiFilters[k] = value as { start?: string; end?: string }
+        else if (k === 'leaveBalance') apiFilters[k] = value as string
       }
     }
   })
@@ -147,33 +151,35 @@ export function getUpdatedFilters(
   value: string | boolean | { start?: string; end?: string },
   currentFilters: FilterState
 ): FilterState {
-  const newFilters = { ...currentFilters }
-
+  let newValue: unknown
+  
   switch (key) {
-    case 'hasDocuments':
-      newFilters.hasDocuments = value as boolean
+    case 'type':
+    case 'status':
+    case 'team':
+    case 'department':
+    case 'cutoff': {
+      const currentArray = currentFilters[key] as string[]
+      newValue = currentArray.includes(value as string)
+        ? currentArray.filter(v => v !== value)
+        : [...currentArray, value]
       break
+    }
+    case 'hasDocuments':
     case 'leaveBalance':
-      newFilters.leaveBalance = value as string
+      newValue = value
       break
     case 'dateRange':
-      newFilters.dateRange = {
-        start: (value as { start?: string; end?: string }).start || newFilters.dateRange.start,
-        end: (value as { start?: string; end?: string }).end || newFilters.dateRange.end
-      }
+      newValue = value
       break
     default:
-      const values = newFilters[key] as string[]
-      const stringValue = value as string
-      const index = values.indexOf(stringValue)
-      if (index > -1) {
-        values.splice(index, 1)
-      } else {
-        values.push(stringValue)
-      }
+      newValue = value
   }
 
-  return newFilters
+  return {
+    ...currentFilters,
+    [key]: newValue
+  }
 }
 
 export function getClearedFilters(filterKey: keyof FilterState, currentFilters: FilterState): FilterState {

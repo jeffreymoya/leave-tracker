@@ -1,0 +1,3 @@
+export function ProfileDropdown({ _open }: { _open: boolean }) {
+  // ... existing code ...
+} 

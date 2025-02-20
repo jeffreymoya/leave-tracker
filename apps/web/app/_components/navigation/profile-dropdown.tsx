@@ -5,7 +5,7 @@ import { UserCircleIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { Fragment } from 'react'
 
-export default function ProfileDropdown() {
+export function ProfileDropdown({ _open }: { _open: boolean }) {
   return (
     <Menu as="div" className="relative">
       {({ open }) => (

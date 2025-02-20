@@ -1,7 +1,8 @@
 import type { Leave } from '@/types/leaves'
-import { LeaveCardHeader } from './leave-card-header'
+
 import { LeaveCardContent } from './leave-card-content'
 import { LeaveCardFooter } from './leave-card-footer'
+import { LeaveCardHeader } from './leave-card-header'
 
 interface LeaveCardProps {
   leave: Leave

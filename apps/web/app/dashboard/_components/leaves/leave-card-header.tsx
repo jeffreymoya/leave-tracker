@@ -1,4 +1,5 @@
 import type { Leave } from '@/types/leaves'
+
 import { getLeaveTypeIcon } from './leave-list.utils'
 
 interface LeaveCardHeaderProps {

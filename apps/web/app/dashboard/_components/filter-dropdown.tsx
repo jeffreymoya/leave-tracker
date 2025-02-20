@@ -14,7 +14,7 @@ export function FilterDropdown({ label, value, options, onChange }: FilterDropdo
         <button
           type="button"
           className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900"
-          onClick={(e) => {
+          onClick={(_e) => {
             const menu = document.getElementById(`${label.toLowerCase()}-menu`)
             menu?.classList.toggle('hidden')
           }}

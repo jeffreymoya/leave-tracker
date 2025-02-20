@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import ProfileDropdown from './profile-dropdown'
+import { ProfileDropdown } from './profile-dropdown'
 
 export default function Navigation() {
   const pathname = usePathname()

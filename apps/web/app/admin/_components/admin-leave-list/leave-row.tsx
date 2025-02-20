@@ -1,16 +1,18 @@
 import { XMarkIcon, DocumentIcon } from '@heroicons/react/24/outline'
+
 import type { Leave } from '@/types/leaves'
+
 import { handleDownload } from './admin-leave-list.utils'
 
 interface LeaveRowProps {
   leave: Leave
   isSelected: boolean
-  isExpanded: boolean
+  _isExpanded: boolean
   onSelect: (e: React.MouseEvent | React.ChangeEvent<HTMLInputElement>) => void
   onClick: () => void
 }
 
-export function LeaveRow({ leave, isSelected, isExpanded, onSelect, onClick }: LeaveRowProps) {
+export function LeaveRow({ leave, isSelected, _isExpanded, onSelect, onClick }: LeaveRowProps) {
   return (
     <tr 
       className={`${isSelected ? 'bg-gray-50' : 'hover:bg-gray-50'} cursor-pointer transition-colors`}

@@ -23,7 +23,7 @@ export function sortLeaves(data: Leave[], sortColumn: keyof Leave, sortDirection
 
 export function handleDownload(attachment: { id: string; type: 'document' | 'image'; name: string }) {
   // Mock download functionality
-  const mockFileUrl = `https://mock-server.com/files/${attachment.id}/${attachment.name}`
+  const _mockFileUrl = 'https://example.com/mock-file.pdf'
   
   // Create blob to simulate file download
   const mockContent = `Mock content for ${attachment.name}`

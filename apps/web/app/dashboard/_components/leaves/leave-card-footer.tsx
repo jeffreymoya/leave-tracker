@@ -1,5 +1,7 @@
 import { DocumentIcon, PaperClipIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+
 import type { Leave } from '@/types/leaves'
+
 import { handleDownload } from './leave-list.utils'
 
 interface LeaveCardFooterProps {

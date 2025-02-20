@@ -1,9 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+
 import type { Leave } from '@/types/leaves'
-import { LeaveListLayout } from './admin-leave-list/leave-list-layout'
+
 import { sortLeaves } from './admin-leave-list/admin-leave-list.utils'
+import { LeaveListLayout } from './admin-leave-list/leave-list-layout'
+
 import type { ConfirmDialogConfig } from './admin-leave-list/admin-leave-list.utils'
 
 interface AdminLeaveListProps {
@@ -79,7 +82,7 @@ export function AdminLeaveList({ data }: AdminLeaveListProps) {
     })
   }
 
-  const handleMarkAsDeduction = (leaveId: string) => {
+  const handleMarkAsDeduction = async (_leaveId: string) => {
     setConfirmDialog({
       isOpen: true,
       title: 'Mark as Deduction',
@@ -92,13 +95,17 @@ export function AdminLeaveList({ data }: AdminLeaveListProps) {
     })
   }
 
+  const handleCloseConfirmDialog = () => {
+    setConfirmDialog(null)
+  }
+
   const sortedData = sortLeaves(data, sortColumn, sortDirection)
 
   return (
     <LeaveListLayout
       data={sortedData}
-      sortColumn={sortColumn}
-      sortDirection={sortDirection}
+      _sortColumn={sortColumn}
+      _sortDirection={sortDirection}
       selectedLeaves={selectedLeaves}
       expandedRow={expandedRow}
       confirmDialog={confirmDialog}
@@ -109,7 +116,7 @@ export function AdminLeaveList({ data }: AdminLeaveListProps) {
       onApprove={handleApprove}
       onReject={handleReject}
       onMarkAsDeduction={handleMarkAsDeduction}
-      onCloseConfirmDialog={() => setConfirmDialog(null)}
+      onCloseConfirmDialog={handleCloseConfirmDialog}
     />
   )
 } 

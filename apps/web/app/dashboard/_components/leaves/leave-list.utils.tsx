@@ -1,7 +1,8 @@
 import { CalendarDaysIcon, ClockIcon, UserIcon } from '@heroicons/react/24/outline'
+
 import type { Leave } from '@/types/leaves'
 
-export function getLeaveTypeIcon(type: Leave['type']) {
+export function getLeaveTypeIcon(type: Leave['type']): JSX.Element | null {
   switch (type) {
     case 'Vacation':
       return <CalendarDaysIcon className="h-5 w-5 text-blue-500 flex-shrink-0" aria-hidden="true" />
@@ -14,9 +15,9 @@ export function getLeaveTypeIcon(type: Leave['type']) {
   }
 }
 
-export function handleDownload(attachment: { id: string; type: 'document' | 'image'; name: string }) {
+export function handleDownload(attachment: { id: string; type: 'document' | 'image'; name: string }): void {
   // Mock download functionality
-  const mockFileUrl = `https://mock-server.com/files/${attachment.id}/${attachment.name}`
+  const _mockFileUrl = `https://mock-server.com/files/${attachment.id}/${attachment.name}`
   
   // Create blob to simulate file download
   const mockContent = `Mock content for ${attachment.name}`

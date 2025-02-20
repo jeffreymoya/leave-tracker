@@ -1,8 +1,10 @@
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Fragment } from 'react'
-import type { FilterState, FilterSection } from './admin-filters.utils'
+
 import { classNames, hasFilterValue } from './admin-filters.utils'
+
+import type { FilterState, FilterSection } from './admin-filters.utils'
 
 interface MobileFiltersProps {
   isOpen: boolean
