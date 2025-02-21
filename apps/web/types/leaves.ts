@@ -1,4 +1,4 @@
-export type LeaveType = 'Vacation' | 'Sick' | 'Personal' | 'Emergency'
+export type LeaveType = 'Vacation' | 'Sick' | 'Emergency'
 
 export type LeaveStatus = 'Pending' | 'Approved' | 'Rejected'
 

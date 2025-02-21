@@ -33,7 +33,7 @@ export function NotificationsDropdown() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-lg hover:bg-[var(--primary-dark)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] relative"
+        className="p-2 rounded-lg hover:bg-[var(--primary-dark)] focus:outline-none relative"
       >
         <BellIcon className="h-6 w-6 text-white" />
         {unreadCount > 0 && (

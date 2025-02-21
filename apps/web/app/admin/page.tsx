@@ -26,7 +26,7 @@ export default function AdminPage() {
   const { data: leaves = [], isLoading, error } = useLeavesQuery()
 
   const typeCounts = useMemo(() => {
-    const counts: Record<LeaveType, number> = { Vacation: 0, Sick: 0, Personal: 0 }
+    const counts: Record<LeaveType, number> = { Vacation: 0, Sick: 0, Emergency: 0 }
     leaves.forEach(leave => {
       counts[leave.type]++
     })

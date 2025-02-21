@@ -22,7 +22,7 @@ const mockSupervisors = [
 ]
 
 const leaveTypeOptions: LeaveType[] = ['Sick', 'Vacation', 'Emergency']
-const QUICK_OPTIONS = {
+const QUICK_OPTIONS: Record<LeaveType, ReadonlyArray<{ label: string; duration: number }>> = {
   'Vacation': [
     { label: 'Rest of week', duration: 0 },
     { label: 'Next Week', duration: 0 }
@@ -41,15 +41,39 @@ const QUICK_OPTIONS = {
   ]
 } as const
 
-export function CreateLeaveForm({ onClose }: { onClose: () => void }) {
-  const [type, setType] = useState<LeaveType>('Vacation')
-  const [startDate, setStartDate] = useState(() => new Date().toISOString().split('T')[0])
-  const [endDate, setEndDate] = useState(() => {
+interface CreateLeaveFormProps {
+  onClose: () => void;
+  initialType?: LeaveType;
+  initialStartDate?: string;
+  initialEndDate?: string;
+  initialReason?: string;
+  isEdit?: boolean;
+  onSubmit?: (data: {
+    type: LeaveType;
+    startDate: string;
+    endDate: string;
+    reason: string;
+    supervisor: string;
+  }) => void;
+}
+
+export function CreateLeaveForm({ 
+  onClose, 
+  initialType = 'Sick',
+  initialStartDate,
+  initialEndDate,
+  initialReason = '',
+  isEdit = false,
+  onSubmit
+}: CreateLeaveFormProps) {
+  const [type, setType] = useState<LeaveType>(initialType)
+  const [startDate, setStartDate] = useState(initialStartDate || new Date().toISOString().split('T')[0])
+  const [endDate, setEndDate] = useState(initialEndDate || (() => {
     const date = new Date()
     date.setDate(date.getDate() + 3)
     return date.toISOString().split('T')[0]
-  })
-  const [reason, setReason] = useState('')
+  }))
+  const [reason, setReason] = useState(initialReason)
   const [_attachments, setAttachments] = useState<File[]>([])
   const [supervisor, setSupervisor] = useState('Miguel Ramos')
 
@@ -81,6 +105,13 @@ export function CreateLeaveForm({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    onSubmit?.({
+      type,
+      startDate,
+      endDate,
+      reason,
+      supervisor
+    })
     onClose()
   }
 
@@ -96,13 +127,15 @@ export function CreateLeaveForm({ onClose }: { onClose: () => void }) {
         onSelect={setType} 
       />
 
-      <DateQuickOptions
-        type={type}
-        quickOptions={QUICK_OPTIONS}
-        startDate={startDate}
-        endDate={endDate}
-        onSelect={handleQuickDateSelect}
-      />
+      {!isEdit && (
+        <DateQuickOptions
+          type={type}
+          quickOptions={QUICK_OPTIONS}
+          startDate={startDate}
+          endDate={endDate}
+          onSelect={handleQuickDateSelect}
+        />
+      )}
 
       <DateRangeInputs
         startDate={startDate}

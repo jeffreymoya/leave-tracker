@@ -6,7 +6,7 @@ export function DateQuickOptions({
   onSelect
 }: {
   type: string
-  quickOptions: Record<string, Array<{ label: string; duration: number }>>
+  quickOptions: Record<string, ReadonlyArray<{ label: string; duration: number }>>
   startDate: string
   endDate: string
   onSelect: (option: { label: string; duration: number }) => void

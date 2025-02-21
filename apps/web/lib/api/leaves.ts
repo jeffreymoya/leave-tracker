@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import type { Leave, LeaveType, LeaveStatus } from '@/types/leaves'
 
-const leaveTypes: LeaveType[] = ['Vacation', 'Sick', 'Personal']
+const leaveTypes: LeaveType[] = ['Vacation', 'Sick', 'Emergency']
 const leaveStatuses: LeaveStatus[] = ['Pending', 'Approved', 'Rejected']
 
 const filipinoNames = [
@@ -47,12 +47,12 @@ const sampleReasons = {
     'Recovery from surgery',
     'Not feeling well'
   ],
-  Personal: [
+  Emergency: [
     'Moving house',
     'Family emergency',
     'Home repairs',
     'Important appointment',
-    'Personal matters'
+    'Emergency matters'
   ]
 }
 

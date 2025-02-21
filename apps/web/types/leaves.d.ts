@@ -1,5 +1,5 @@
 export type LeaveStatus = 'Pending' | 'Approved' | 'Rejected'
-export type LeaveType = 'Vacation' | 'Sick' | 'Personal'
+export type LeaveType = 'Vacation' | 'Sick' | 'Emergency'
 
 export interface Leave {
   id: string

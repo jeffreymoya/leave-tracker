@@ -24,7 +24,7 @@ export default function DashboardPage() {
   const { data: leaves = [], isLoading, error } = useLeavesQuery()
 
   const typeCounts = useMemo(() => {
-    const counts: Record<LeaveType, number> = { Vacation: 0, Sick: 0, Personal: 0 }
+    const counts: Record<LeaveType, number> = { Vacation: 0, Sick: 0, Emergency: 0 }
     leaves.forEach(leave => {
       counts[leave.type]++
     })
@@ -100,7 +100,7 @@ export default function DashboardPage() {
               <div>
                 <p className="text-gray-500">Emergency</p>
                 <p className="text-2xl font-semibold text-gray-900">
-                  {typeCounts.Personal} days
+                  {typeCounts.Emergency} days
                 </p>
                 <span className="text-sm text-gray-500">Remaining</span>
               </div>

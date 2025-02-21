@@ -8,7 +8,7 @@ export function getLeaveTypeIcon(type: Leave['type']): JSX.Element | null {
       return <CalendarDaysIcon className="h-5 w-5 text-blue-500 flex-shrink-0" aria-hidden="true" />
     case 'Sick':
       return <ClockIcon className="h-5 w-5 text-red-500 flex-shrink-0" aria-hidden="true" />
-    case 'Personal':
+    case 'Emergency':
       return <UserIcon className="h-5 w-5 text-purple-500 flex-shrink-0" aria-hidden="true" />
     default:
       return null

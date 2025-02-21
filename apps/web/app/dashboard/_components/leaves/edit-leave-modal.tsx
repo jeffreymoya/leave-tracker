@@ -4,6 +4,7 @@ import { Dialog, Transition  } from '@headlessui/react'
 import { Fragment, useState, useEffect } from 'react'
 
 import type { Leave, LeaveType } from '@/types/leaves'
+import { CreateLeaveForm } from './create-leave-form'
 
 interface EditLeaveModalProps {
   isOpen: boolean
@@ -13,29 +14,11 @@ interface EditLeaveModalProps {
 }
 
 export function EditLeaveModal({ isOpen, onClose, leave, onSave }: EditLeaveModalProps) {
-  const [type, setType] = useState<LeaveType>(leave.type)
-  const [startDate, setStartDate] = useState(leave.startDate)
-  const [endDate, setEndDate] = useState(leave.endDate)
-  const [reason, setReason] = useState(leave.reason || '')
-  const [_attachments, setAttachments] = useState<File[]>([])
-
-  useEffect(() => {
-    setType(leave.type)
-    setStartDate(leave.startDate)
-    setEndDate(leave.endDate)
-    setReason(leave.reason || '')
-  }, [leave])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleFormSubmit = (data: any) => {
     onSave({
       ...leave,
-      type,
-      startDate,
-      endDate,
-      reason: reason || undefined
+      ...data
     })
-    onClose()
   }
 
   return (
@@ -49,9 +32,8 @@ export function EditLeaveModal({ isOpen, onClose, leave, onSave }: EditLeaveModa
           leave="ease-in duration-300"
           leaveFrom="opacity-100 backdrop-blur-sm"
           leaveTo="opacity-0 backdrop-blur-none"
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm"
         >
-          <div className="fixed inset-0" />
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -64,114 +46,27 @@ export function EditLeaveModal({ isOpen, onClose, leave, onSave }: EditLeaveModa
               leave="ease-in duration-300"
               leaveFrom="opacity-100 translate-y-0 scale-100"
               leaveTo="opacity-0 translate-y-4 scale-95"
-              style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-2xl transition-all">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900 mb-4"
-                >
-                  Edit Leave Request
-                </Dialog.Title>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Leave Type
-                    </label>
-                    <select
-                      value={type}
-                      onChange={(e) => setType(e.target.value as LeaveType)}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                      required
-                    >
-                      <option value="Vacation">Vacation</option>
-                      <option value="Sick">Sick</option>
-                      <option value="Personal">Personal</option>
-                    </select>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Start Date
-                      </label>
-                      <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        End Date
-                      </label>
-                      <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Reason
-                    </label>
-                    <textarea
-                      value={reason}
-                      onChange={(e) => setReason(e.target.value)}
-                      rows={3}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Attachments
-                    </label>
-                    {leave.attachments && leave.attachments.length > 0 && (
-                      <div className="mb-2 flex gap-2">
-                        {leave.attachments.map(attachment => (
-                          <span
-                            key={attachment.id}
-                            className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gray-100 text-sm text-gray-700"
-                          >
-                            {attachment.name}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <input
-                      type="file"
-                      multiple
-                      onChange={(e) => setAttachments(Array.from(e.target.files || []))}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-[var(--accent)] file:text-white hover:file:bg-[var(--accent-hover)]"
-                    />
-                  </div>
-
-                  <div className="mt-6 flex justify-end gap-3">
-                    <button
-                      type="button"
-                      onClick={onClose}
-                      className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                    >
-                      Save Changes
-                    </button>
-                  </div>
-                </form>
-              </Dialog.Panel>
+              <div style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}>
+                <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-2xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                  >
+                    Edit Leave Request
+                  </Dialog.Title>
+                  
+                  <CreateLeaveForm 
+                    onClose={onClose}
+                    initialType={leave.type}
+                    initialStartDate={leave.startDate}
+                    initialEndDate={leave.endDate}
+                    initialReason={leave.reason || ''}
+                    isEdit={true}
+                    onSubmit={handleFormSubmit}
+                  />
+                </Dialog.Panel>
+              </div>
             </Transition.Child>
           </div>
         </div>

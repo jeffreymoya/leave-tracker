@@ -23,7 +23,7 @@ export function ProfileDropdown({ _open }: { _open: boolean }) {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-2 rounded-lg text-white/90 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
+        className="flex items-center gap-2 p-2 rounded-lg text-white/90 hover:text-white hover:bg-white/10 transition-colors duration-200 focus:outline-none"
       >
         <UserCircleIcon className="h-6 w-6" />
       </button>

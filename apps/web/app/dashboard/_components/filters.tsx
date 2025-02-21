@@ -16,7 +16,7 @@ interface FiltersProps {
   statusCounts?: Record<LeaveStatus, number>
 }
 
-export function Filters({ onFilterChange, typeCounts = { Vacation: 0, Sick: 0, Personal: 0 }, statusCounts = { Pending: 0, Approved: 0, Rejected: 0 } }: FiltersProps) {
+export function Filters({ onFilterChange, typeCounts = { Vacation: 0, Sick: 0, Emergency: 0 }, statusCounts = { Pending: 0, Approved: 0, Rejected: 0 } }: FiltersProps) {
   const [selectedType, setSelectedType] = useState<LeaveType | ''>('')
   const [selectedStatus, setSelectedStatus] = useState<LeaveStatus | ''>('')
   const [selectedYear, setSelectedYear] = useState<'current' | 'previous'>('current')
