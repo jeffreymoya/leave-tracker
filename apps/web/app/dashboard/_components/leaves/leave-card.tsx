@@ -23,6 +23,7 @@ export function LeaveCard({ leave, onEdit, onDelete }: LeaveCardProps) {
       <div className="px-4 py-3 sm:px-6">
         <LeaveCardFooter
           attachments={leave.attachments}
+          status={leave.status}
           onEdit={() => onEdit(leave)}
           onDelete={() => onDelete(leave)}
         />

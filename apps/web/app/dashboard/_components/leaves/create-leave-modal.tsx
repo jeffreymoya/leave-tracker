@@ -25,10 +25,37 @@ interface CreateLeaveModalProps {
   onClose: () => void
 }
 
+// Add new type for quick options
+type DateQuickOption = { label: string; duration: number };
+
+const leaveTypeOptions: LeaveType[] = ['Sick', 'Vacation', 'Emergency'];
+const QUICK_OPTIONS: Record<LeaveType, DateQuickOption[]> = {
+  'Vacation': [
+    { label: 'Rest of week', duration: 0 },
+    { label: 'Next Week', duration: 0 }
+  ],
+  'Sick': [
+    { label: 'Today', duration: 0 },
+    { label: 'Tomorrow', duration: 1 },
+    { label: '2 Days', duration: 1 },
+    { label: '3 Days', duration: 2 }
+  ],
+  'Emergency': [
+    { label: 'Today', duration: 0 },
+    { label: 'Tomorrow', duration: 1 },
+    { label: '2 Days', duration: 1 },
+    { label: '3 Days', duration: 2 }
+  ]
+};
+
 export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
   const [type, setType] = useState<LeaveType>('Vacation')
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [startDate, setStartDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [endDate, setEndDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 3);
+    return date.toISOString().split('T')[0];
+  });
   const [reason, setReason] = useState('')
   const [_attachments, setAttachments] = useState<File[]>([])
   const [supervisor, setSupervisor] = useState<string>('Miguel Ramos')
@@ -39,6 +66,34 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
     : mockSupervisors.filter((supervisor) =>
         supervisor.toLowerCase().includes(query.toLowerCase())
       )
+
+  // Add this function for handling quick date selection
+  const handleQuickDateSelect = (option: DateQuickOption) => {
+    const today = new Date();
+    let start = new Date();
+    let end = new Date();
+
+    if (type === 'Vacation') {
+      if (option.label === 'Rest of week') {
+        const dayOfWeek = today.getDay();
+        const daysUntilFriday = dayOfWeek <= 5 ? 5 - dayOfWeek : 6;
+        end.setDate(today.getDate() + daysUntilFriday);
+      } else { // Next Week
+        start.setDate(today.getDate() + (7 - today.getDay()));
+        end.setDate(start.getDate() + 4);
+      }
+    } else {
+      start.setDate(today.getDate() + option.duration);
+      // Calculate end date based on selection
+      const additionalDays = option.label.includes('Days') 
+        ? parseInt(option.label.split(' ')[0]) - 1
+        : 0;
+      end.setDate(start.getDate() + additionalDays);
+    }
+
+    setStartDate(start.toISOString().split('T')[0]);
+    setEndDate(end.toISOString().split('T')[0]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,6 +121,43 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
       document.body.style.paddingRight = `${originalPadding}px`
     }
   }, [isOpen])
+
+  useEffect(() => {
+    const today = new Date();
+    const endDate = new Date();
+    
+    // Select first quick option automatically
+    handleQuickDateSelect(QUICK_OPTIONS[type][0]);
+  }, [type]);
+
+  const getDatesForOption = (option: DateQuickOption) => {
+    const today = new Date();
+    let start = new Date();
+    let end = new Date();
+
+    if (type === 'Vacation') {
+      if (option.label === 'Rest of week') {
+        const dayOfWeek = today.getDay();
+        const daysUntilFriday = dayOfWeek <= 5 ? 5 - dayOfWeek : 6;
+        end.setDate(today.getDate() + daysUntilFriday);
+      } else { // Next Week
+        start.setDate(today.getDate() + (7 - today.getDay()));
+        end.setDate(start.getDate() + 4);
+      }
+    } else {
+      start.setDate(today.getDate() + option.duration);
+      // Update this calculation to match handleQuickDateSelect
+      const additionalDays = option.label.includes('Days') 
+        ? parseInt(option.label.split(' ')[0]) - 1
+        : 0;
+      end.setDate(start.getDate() + additionalDays);
+    }
+
+    return {
+      start: start.toISOString().split('T')[0],
+      end: end.toISOString().split('T')[0]
+    };
+  };
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -100,7 +192,7 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-2xl transition-all">
+                <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-2xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900 mb-4"
@@ -110,19 +202,105 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
 
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
                         Leave Type
                       </label>
-                      <select
-                        value={type}
-                        onChange={(e) => setType(e.target.value as LeaveType)}
+                      <div className="inline-flex rounded-md shadow-sm" role="group">
+                        {leaveTypeOptions.map((option) => (
+                          <button
+                            key={option}
+                            type="button"
+                            onClick={() => setType(option)}
+                            className={`px-4 py-2 text-sm font-medium border ${
+                              type === option 
+                                ? 'bg-[var(--accent)] text-white border-[var(--accent)]'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                            } ${option === 'Sick' ? 'rounded-l-lg' : ''} ${
+                              option === 'Emergency' ? 'rounded-r-lg' : 'border-r-0'
+                            } focus:z-10 focus:ring-1 focus:ring-[var(--accent)]`}
+                          >
+                            {option}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="col-span-2 space-y-2">
+                        <div className="flex flex-wrap gap-2">
+                          {QUICK_OPTIONS[type].map((option) => {
+                            const dates = getDatesForOption(option);
+                            const isSelected = startDate === dates.start && endDate === dates.end;
+                            
+                            return (
+                              <button
+                                key={option.label}
+                                type="button"
+                                onClick={() => handleQuickDateSelect(option)}
+                                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all
+                                  ${
+                                    isSelected
+                                      ? 'bg-[var(--accent)] text-white ring-2 ring-[var(--accent)] ring-offset-2 shadow-lg'
+                                      : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-md'
+                                  }`}
+                              >
+                                {option.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Start Date
+                            </label>
+                            <input
+                              type="date"
+                              value={startDate}
+                              onChange={(e) => setStartDate(e.target.value)}
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              End Date
+                            </label>
+                            <input
+                              type="date"
+                              value={endDate}
+                              onChange={(e) => setEndDate(e.target.value)}
+                              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Reason
+                      </label>
+                      <textarea
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
+                        rows={3}
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
                         required
-                      >
-                        <option value="Vacation">Vacation</option>
-                        <option value="Sick">Sick</option>
-                        <option value="Personal">Personal</option>
-                      </select>
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Attachments
+                      </label>
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => setAttachments(Array.from(e.target.files || []))}
+                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-[var(--accent)] file:text-white hover:file:bg-[var(--accent-hover)]"
+                      />
                     </div>
 
                     <div>
@@ -190,58 +368,6 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
                           </Transition>
                         </div>
                       </Combobox>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Start Date
-                        </label>
-                        <input
-                          type="date"
-                          value={startDate}
-                          onChange={(e) => setStartDate(e.target.value)}
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          End Date
-                        </label>
-                        <input
-                          type="date"
-                          value={endDate}
-                          onChange={(e) => setEndDate(e.target.value)}
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Reason
-                      </label>
-                      <textarea
-                        value={reason}
-                        onChange={(e) => setReason(e.target.value)}
-                        rows={3}
-                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--accent)] focus:ring-[var(--accent)]"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Attachments
-                      </label>
-                      <input
-                        type="file"
-                        multiple
-                        onChange={(e) => setAttachments(Array.from(e.target.files || []))}
-                        className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-[var(--accent)] file:text-white hover:file:bg-[var(--accent-hover)]"
-                      />
                     </div>
 
                     <div className="mt-6 flex justify-end gap-3">

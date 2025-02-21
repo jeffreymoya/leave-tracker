@@ -15,7 +15,7 @@ export default function Navigation() {
 
   return (
     <nav className="relative bg-[var(--primary)] shadow-md z-50">
-      <div className="container h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto h-20 flex items-center justify-between px-6">
         <Link 
           id="header-logo"
           href="/" 

@@ -1,4 +1,5 @@
-import { CalendarDaysIcon, UserIcon, DocumentTextIcon } from '@heroicons/react/24/outline'
+import { CalendarDaysIcon, UserIcon, DocumentTextIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { formatDistanceToNow, differenceInDays } from 'date-fns'
 
 interface LeaveCardContentProps {
   startDate: string
@@ -8,32 +9,73 @@ interface LeaveCardContentProps {
 }
 
 export function LeaveCardContent({ startDate, endDate, userId, reason }: LeaveCardContentProps) {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  const durationDays = differenceInDays(end, start) + 1 // +1 to include both start and end days
+
   return (
-    <div className="px-4 py-1.5 sm:px-6">
-      <div className="space-y-1.5">
-        <div className="flex items-start gap-2">
-          <CalendarDaysIcon className="h-4 w-4 text-[var(--text-secondary)] flex-shrink-0" aria-hidden="true" />
-          <p className="text-sm font-medium text-[var(--text-primary)]">
-            {new Date(startDate).toLocaleDateString()} to{' '}
-            {new Date(endDate).toLocaleDateString()}
-          </p>
+    <div className="px-4 py-2 sm:px-6">
+      <div className="grid grid-cols-2 gap-2">
+        {/* Left Column */}
+        <div className="space-y-3">
+          {/* Filed Date */}
+          <div className="flex items-start gap-3">
+            <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 p-1.5">
+              <CalendarDaysIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-gray-900">
+                Filed {formatDistanceToNow(start, { addSuffix: true })}
+              </p>
+              <p className="text-xs text-gray-500">
+                {start.toLocaleDateString()}
+              </p>
+            </div>
+          </div>
+
+          {/* Duration */}
+          <div className="flex items-start gap-3">
+            <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 p-1.5">
+              <ClockIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+            </div>
+            <div className="flex-1">
+              <p className="text-sm text-gray-900">
+                Duration of {durationDays} day{durationDays > 1 ? 's' : ''}
+              </p>
+              <p className="text-xs text-gray-500">
+                {start.toLocaleDateString()} - {end.toLocaleDateString()}
+              </p>
+            </div>
+          </div>
         </div>
-        
-        <div className="flex items-start gap-2">
-          <UserIcon className="h-4 w-4 text-[var(--text-secondary)] mt-0.5 flex-shrink-0" aria-hidden="true" />
-          <p className="text-sm text-[var(--text-primary)] line-clamp-2">
-            Supervisor: {userId}
-          </p>
-        </div>
-        
-        {reason && (
-          <div className="flex items-start gap-2">
-            <DocumentTextIcon className="h-4 w-4 text-[var(--text-secondary)] mt-0.5 flex-shrink-0" aria-hidden="true" />
-            <p className="text-sm text-[var(--text-primary)] line-clamp-2">
-              {reason}
+
+        {/* Right Column */}
+        <div className="space-y-3">
+          {/* Supervisor Section */}
+          <div className="flex items-start gap-3">
+            <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 p-1.5">
+              <UserIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+            </div>
+            <p className="text-sm text-gray-600">
+              <span className="font-medium">Supervisor:</span> <span className="text-sm text-gray-900">{userId}</span>
             </p>
           </div>
-        )}
+
+          {/* Add empty spacer to match left column height when reason exists */}
+          {reason && <div className="h-[15px]"/>}
+
+          {/* Reason Section */}
+          {reason && (
+            <div className="flex items-start gap-3">
+              <div className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 p-1.5">
+                <DocumentTextIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+              </div>
+              <p className="text-sm text-gray-600">
+                <span className="font-medium">Reason:</span> <span className="text-sm text-gray-900">{reason}</span>
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
