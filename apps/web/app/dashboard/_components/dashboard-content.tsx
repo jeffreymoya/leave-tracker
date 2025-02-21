@@ -8,6 +8,7 @@ import { DeleteLeaveModal } from './leaves/delete-leave-modal'
 import { EditLeaveModal } from './leaves/edit-leave-modal'
 import { LeaveList } from './leaves/list'
 import { LoadingSkeleton } from './loading-skeleton'
+import { FloatingActionButton } from './fab'
 
 interface DashboardContentProps {
   isLoading: boolean
@@ -46,6 +47,8 @@ export function DashboardContent({ isLoading, view, data }: DashboardContentProp
 
   return (
     <>
+      <FloatingActionButton />
+      
       {view === 'list' ? (
         <LeaveList
           leaves={data}

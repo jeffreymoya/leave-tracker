@@ -56,13 +56,13 @@ export function DeleteLeaveModal({ isOpen, onClose, leave, onConfirm }: DeleteLe
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    Delete Leave Request
+                    Cancel Leave Request
                   </Dialog.Title>
                 </div>
 
                 <div className="mt-4">
                   <p className="text-sm text-gray-500">
-                    Are you sure you want to delete this leave request? This action cannot be undone.
+                    Are you sure you want to cancel this leave request? This action cannot be undone.
                   </p>
                   <div className="mt-2 bg-gray-50 p-4 rounded-lg">
                     <dl className="space-y-2 text-sm">
@@ -98,9 +98,9 @@ export function DeleteLeaveModal({ isOpen, onClose, leave, onConfirm }: DeleteLe
                   <button
                     type="button"
                     onClick={handleDelete}
-                    className="btn-destructive"
+                    className="btn btn-destructive"
                   >
-                    Delete
+                    Proceed
                   </button>
                 </div>
               </Dialog.Panel>

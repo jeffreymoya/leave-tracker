@@ -1,4 +1,4 @@
-import { DocumentIcon, PaperClipIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { DocumentIcon, PaperClipIcon, PencilSquareIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 import type { Leave } from '@/types/leaves'
 
@@ -19,14 +19,23 @@ export function LeaveCardFooter({ attachments, onEdit, onDelete }: LeaveCardFoot
     return attachments.map(attachment => (
       <button
         key={attachment.id}
-        className="group relative inline-flex items-center gap-1 hover:z-10"
+        className="group relative flex items-center gap-1 hover:z-10"
         onClick={() => handleDownload(attachment)}
         title={attachment.name}
       >
         {attachment.type === 'document' ? (
-          <DocumentIcon className="h-7 w-7 rounded-lg border-2 border-white bg-gray-50 p-1 text-gray-600 shadow-sm transition-all group-hover:scale-110" />
+          <div className="flex items-center bg-white rounded-full px-3 py-1.5 transition-all duration-200 
+              hover:-translate-y-0.5 shadow-sm hover:shadow-md border border-gray-200 hover:border-blue-200">
+            <DocumentIcon className="h-5 w-5 text-gray-600" />
+            <span className="hidden md:inline ml-2 text-sm text-gray-600 font-medium">
+              {attachment.name}
+            </span>
+          </div>
         ) : (
-          <PaperClipIcon className="h-7 w-7 rounded-lg border-2 border-white bg-gray-50 p-1 text-gray-600 shadow-sm transition-all group-hover:scale-110" />
+          <div className="h-8 w-8 rounded-lg bg-white shadow-sm hover:shadow-md border border-gray-200 
+              p-1.5 transition-all duration-200 hover:-translate-y-0.5">
+            <PaperClipIcon className="h-full w-full text-gray-600 hover:scale-110 transition-transform" />
+          </div>
         )}
       </button>
     ))
@@ -34,23 +43,29 @@ export function LeaveCardFooter({ attachments, onEdit, onDelete }: LeaveCardFoot
 
   return (
     <div className="mt-2 pt-1.5 border-t border-gray-100 flex items-center justify-between">
-      <div className="flex -space-x-2">
+      <div className="flex gap-2">
         {renderAttachments()}
       </div>
       <div className="flex gap-2">
         <button
-          className="rounded-full p-1 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all"
+          className="flex items-center gap-1 rounded-full px-3 py-1.5 text-gray-600 hover:text-blue-600 
+            bg-white shadow-sm hover:shadow-md border border-gray-200 hover:border-blue-200 
+            transition-all duration-200 hover:-translate-y-0.5"
           onClick={onEdit}
           aria-label="Edit leave request"
         >
           <PencilSquareIcon className="h-5 w-5" />
+          <span className="hidden md:inline text-sm font-medium">Edit</span>
         </button>
         <button
-          className="rounded-full p-1 text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all"
+          className="flex items-center gap-1 rounded-full px-3 py-1.5 text-gray-600 hover:text-red-600 
+            bg-white shadow-sm hover:shadow-md border border-gray-200 hover:border-red-200 
+            transition-all duration-200 hover:-translate-y-0.5"
           onClick={onDelete}
-          aria-label="Delete leave request"
+          aria-label="Cancel leave request"
         >
-          <TrashIcon className="h-5 w-5" />
+          <XMarkIcon className="h-5 w-5" />
+          <span className="hidden md:inline text-sm font-medium">Cancel</span>
         </button>
       </div>
     </div>

@@ -19,6 +19,7 @@ interface FiltersProps {
 export function Filters({ onFilterChange, typeCounts = { Vacation: 0, Sick: 0, Personal: 0 }, statusCounts = { Pending: 0, Approved: 0, Rejected: 0 } }: FiltersProps) {
   const [selectedType, setSelectedType] = useState<LeaveType | ''>('')
   const [selectedStatus, setSelectedStatus] = useState<LeaveStatus | ''>('')
+  const [selectedYear, setSelectedYear] = useState<'current' | 'previous'>('current')
 
   const handleTypeChange = (value: LeaveType | '') => {
     setSelectedType(value)
@@ -30,116 +31,109 @@ export function Filters({ onFilterChange, typeCounts = { Vacation: 0, Sick: 0, P
     onFilterChange({ status: value as LeaveStatus })
   }
 
-  return (
-    <div className="flex flex-wrap gap-4 items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-      <div id="filters" className="flex gap-4">
-        <div className="w-48">
-          <Listbox value={selectedType} onChange={handleTypeChange}>
-            <div className="relative">
-              <Listbox.Button className="relative w-full px-4 py-2 text-sm font-medium text-left text-gray-700 bg-white border rounded-md hover:bg-gray-50">
-                <span className="block truncate">
-                  {selectedType ? (
-                    <div className="flex justify-between items-center">
-                      <span>{selectedType}</span>
-                      <span className="ml-2 px-2 py-0.5 text-sm rounded-full bg-orange-100 text-orange-700 mr-5">
-                        {typeCounts[selectedType as LeaveType]}
-                      </span>
-                    </div>
-                  ) : (
-                    'All Types'
-                  )}
-                </span>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-2">
-                  <ChevronDownIcon className="w-5 h-5 text-gray-400" aria-hidden="true" />
-                </span>
-              </Listbox.Button>
-              <Listbox.Options className="absolute z-10 w-full mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <Listbox.Option
-                  value=""
-                  className={({ active }) =>
-                    `relative cursor-pointer select-none py-2 px-4 ${
-                      active ? 'bg-orange-100 text-orange-900' : 'text-gray-900'
-                    }`
-                  }
-                >
-                  All Types
-                </Listbox.Option>
-                {Object.entries(typeCounts).map(([type, count]) => (
-                  <Listbox.Option
-                    key={type}
-                    value={type}
-                    className={({ active }) =>
-                      `relative cursor-pointer select-none py-2 px-4 ${
-                        active ? 'bg-orange-100 text-orange-900' : 'text-gray-900'
-                      }`
-                    }
-                  >
-                    <div className="flex justify-between items-center">
-                      <span>{type}</span>
-                      <span className="ml-2 px-2 py-0.5 text-sm rounded-full bg-orange-100 text-orange-700">
-                        {count}
-                      </span>
-                    </div>
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </div>
-          </Listbox>
-        </div>
+  const handleYearChange = (year: 'current' | 'previous') => {
+    setSelectedYear(year)
+    // You might want to update the dateRange filter here
+    onFilterChange({ dateRange: year === 'current' ? 
+      { start: new Date(new Date().getFullYear(), 0, 1).toISOString() } : 
+      { start: new Date(new Date().getFullYear() - 1, 0, 1).toISOString() }
+    })
+  }
 
-        <div className="w-48">
-          <Listbox value={selectedStatus} onChange={handleStatusChange}>
-            <div className="relative">
-              <Listbox.Button className="relative w-full px-4 py-2 text-sm font-medium text-left text-gray-700 bg-white border rounded-md hover:bg-gray-50">
-                <span className="block truncate">
-                  {selectedStatus ? (
-                    <div className="flex justify-between items-center">
-                      <span>{selectedStatus}</span>
-                      <span className="ml-2 px-2 py-0.5 text-sm rounded-full bg-orange-100 text-orange-700 mr-5">
-                        {statusCounts[selectedStatus as LeaveStatus]}
-                      </span>
-                    </div>
-                  ) : (
-                    'All Status'
-                  )}
+  const DropdownFilter = ({ value, options, counts, onChange, placeholder }: {
+    value: string
+    options: string[]
+    counts: Record<string, number>
+    onChange: (value: string) => void
+    placeholder: string
+  }) => (
+    <Listbox value={value} onChange={onChange}>
+      <div className="relative">
+        <Listbox.Button className="w-48 py-2 pl-3 pr-10 text-left text-sm bg-white border border-gray-300 rounded-lg shadow-sm cursor-default focus:border-orange-500 focus:ring-2 focus:ring-orange-500">
+          <span className="flex items-center justify-between">
+            {value ? (
+              <span className="flex items-center gap-2">
+                <span className="font-normal">{value}</span>
+                <span className="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-700">
+                  {counts[value]}
                 </span>
-                <span className="absolute inset-y-0 right-0 flex items-center pr-2">
-                  <ChevronDownIcon className="w-5 h-5 text-gray-400" aria-hidden="true" />
+              </span>
+            ) : (
+              <span className="text-sm text-gray-500">{placeholder}</span>
+            )}
+            <ChevronDownIcon className="w-5 h-5 ml-2 text-gray-400" aria-hidden="true" />
+          </span>
+        </Listbox.Button>
+        <Listbox.Options className="absolute z-10 w-full mt-1 overflow-auto text-sm bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 max-h-60 focus:outline-none">
+          <Listbox.Option
+            value=""
+            className={({ active }) =>
+              `px-4 py-2 cursor-pointer ${active ? 'bg-orange-50' : 'text-gray-900'}`
+            }
+          >
+            {placeholder}
+          </Listbox.Option>
+          {options.map((option) => (
+            <Listbox.Option
+              key={option}
+              value={option}
+              className={({ active }) =>
+                `px-4 py-2 cursor-pointer ${active ? 'bg-orange-50' : 'text-gray-900'}`
+              }
+            >
+              <div className="flex items-center justify-between">
+                <span>{option}</span>
+                <span className="px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-700">
+                  {counts[option]}
                 </span>
-              </Listbox.Button>
-              <Listbox.Options className="absolute z-10 w-full mt-1 overflow-auto text-sm bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none">
-                <Listbox.Option
-                  value=""
-                  className={({ active }) =>
-                    `relative cursor-pointer select-none py-2 px-4 ${
-                      active ? 'bg-orange-100 text-orange-900' : 'text-gray-900'
-                    }`
-                  }
-                >
-                  All Status
-                </Listbox.Option>
-                {Object.entries(statusCounts).map(([status, count]) => (
-                  <Listbox.Option
-                    key={status}
-                    value={status}
-                    className={({ active }) =>
-                      `relative cursor-pointer select-none py-2 px-4 ${
-                        active ? 'bg-orange-100 text-orange-900' : 'text-gray-900'
-                      }`
-                    }
-                  >
-                    <div className="flex justify-between items-center">
-                      <span>{status}</span>
-                      <span className="ml-2 px-2 py-0.5 text-sm rounded-full bg-orange-100 text-orange-700">
-                        {count}
-                      </span>
-                    </div>
-                  </Listbox.Option>
-                ))}
-              </Listbox.Options>
-            </div>
-          </Listbox>
-        </div>
+              </div>
+            </Listbox.Option>
+          ))}
+        </Listbox.Options>
+      </div>
+    </Listbox>
+  )
+
+  return (
+    <div className="flex flex-wrap items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+      <div className="flex gap-3">
+        <DropdownFilter
+          value={selectedType}
+          options={Object.keys(typeCounts)}
+          counts={typeCounts}
+          onChange={handleTypeChange}
+          placeholder="Select Type"
+        />
+        <DropdownFilter
+          value={selectedStatus}
+          options={Object.keys(statusCounts)}
+          counts={statusCounts}
+          onChange={handleStatusChange}
+          placeholder="Select Status"
+        />
+      </div>
+      
+      <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+        <button
+          onClick={() => handleYearChange('current')}
+          className={`px-4 py-2 text-sm font-normal rounded-md ${
+            selectedYear === 'current'
+              ? 'bg-white text-orange-700 shadow-sm ring-1 ring-gray-200'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          Current Year
+        </button>
+        <button
+          onClick={() => handleYearChange('previous')}
+          className={`px-4 py-2 text-sm font-normal rounded-md ${
+            selectedYear === 'previous'
+              ? 'bg-white text-orange-700 shadow-sm ring-1 ring-gray-200'
+              : 'text-gray-500 hover:text-gray-700'
+          }`}
+        >
+          Previous Year
+        </button>
       </div>
     </div>
   )

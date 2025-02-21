@@ -7,7 +7,6 @@ import type { LeaveType, LeaveStatus } from '@/types/leaves'
 
 import { DashboardContent } from './_components/dashboard-content'
 import { Filters } from './_components/filters'
-import { ViewSwitcher } from './_components/view-switcher'
 
 interface FilterState {
   type?: LeaveType
@@ -61,7 +60,7 @@ export default function DashboardPage() {
     <div className="container py-8">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
-          <ViewSwitcher view={view} onViewChange={setView} />
+          {/* <ViewSwitcher view={view} onViewChange={setView} /> */}
           <Filters
             onFilterChange={setFilters}
             typeCounts={typeCounts}
