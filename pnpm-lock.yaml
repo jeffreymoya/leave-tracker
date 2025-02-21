@@ -112,7 +112,7 @@ importers:
         specifier: ^18.2.0
         version: 18.3.18
       '@types/react-big-calendar':
-        specifier: ^1.8.0
+        specifier: ^1.16.1
         version: 1.16.1
       '@types/react-dom':
         specifier: ^18.2.0

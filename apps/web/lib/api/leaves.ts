@@ -71,11 +71,16 @@ export async function getLeaves(filters?: {
     const endDate = new Date(startDate)
     endDate.setDate(startDate.getDate() + Math.floor(Math.random() * 7) + 1)
 
+    // Generate createdAt between 1-7 days before start date
+    const createdAtDate = new Date(startDate)
+    createdAtDate.setDate(startDate.getDate() - (Math.floor(Math.random() * 7) + 1))
+
     const type = leaveTypes[Math.floor(Math.random() * leaveTypes.length)]
     return {
       id: `leave-${i + 1}`,
-      startDate: startDate.toISOString().split('T')[0],
-      endDate: endDate.toISOString().split('T')[0],
+      createdAt: createdAtDate.toISOString(),
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
       type: type,
       status: leaveStatuses[Math.floor(Math.random() * leaveStatuses.length)],
       userId: filipinoNames[Math.floor(Math.random() * filipinoNames.length)],
