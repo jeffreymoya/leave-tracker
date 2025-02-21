@@ -2,7 +2,7 @@
 
 import { Dialog, Transition , Combobox } from '@headlessui/react'
 import { UserIcon } from '@heroicons/react/24/outline'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 
 import type { LeaveType } from '@/types/leaves'
@@ -31,7 +31,7 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
   const [endDate, setEndDate] = useState('')
   const [reason, setReason] = useState('')
   const [_attachments, setAttachments] = useState<File[]>([])
-  const [supervisor, setSupervisor] = useState('Miguel Ramos') // Default supervisor
+  const [supervisor, setSupervisor] = useState<string>('Miguel Ramos')
   const [query, setQuery] = useState('')
 
   const filteredSupervisors = query === ''
@@ -46,20 +46,40 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
     onClose()
   }
 
+  const getScrollbarWidth = () => {
+    const documentWidth = document.documentElement.clientWidth
+    const windowWidth = window.innerWidth
+    return Math.max(0, windowWidth - documentWidth)
+  }
+
+  useEffect(() => {
+    if (!isOpen) return
+    
+    const originalPadding = parseFloat(getComputedStyle(document.body).paddingRight)
+    const scrollbarWidth = getScrollbarWidth()
+    
+    document.body.style.overflow = 'hidden'
+    document.body.style.paddingRight = `${originalPadding + scrollbarWidth}px`
+
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.paddingRight = `${originalPadding}px`
+    }
+  }, [isOpen])
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-50" onClose={onClose}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-400"
-          enterFrom="opacity-0 backdrop-blur-none"
-          enterTo="opacity-100 backdrop-blur-sm"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
           leave="ease-in duration-300"
-          leaveFrom="opacity-100 backdrop-blur-sm"
-          leaveTo="opacity-0 backdrop-blur-none"
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <div className="fixed inset-0" />
+          <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
@@ -109,7 +129,7 @@ export function CreateLeaveModal({ isOpen, onClose }: CreateLeaveModalProps) {
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Supervisor
                       </label>
-                      <Combobox value={supervisor} onChange={setSupervisor}>
+                      <Combobox value={supervisor} onChange={(value: string) => setSupervisor(value)}>
                         <div className="relative">
                           <div className="relative w-full">
                             <Combobox.Input

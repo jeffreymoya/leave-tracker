@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { ProfileDropdown } from './profile-dropdown'
+import { NotificationsDropdown } from './notifications-dropdown'
 
 const openSans = Open_Sans({ subsets: ['latin'] })
 
@@ -27,16 +28,12 @@ export default function Navigation() {
         
         {!isAdminRoute && (
           <div id="header-nav" className="hidden md:flex items-center gap-8 flex-grow justify-end mr-10">
-            <Link 
-              href="/team" 
-              className="nav-link text-white/90 hover:text-white font-medium focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 rounded-lg px-4 py-2 bg-[var(--primary-dark)] hover:bg-[var(--primary-darker)] border border-white/20"
-            >
-              Team Schedule
-            </Link>
+            {/* Removed Team Schedule link */}
           </div>
         )}
 
         <div className="flex items-center gap-4">
+          <NotificationsDropdown />
           <ProfileDropdown />
         </div>
       </div>

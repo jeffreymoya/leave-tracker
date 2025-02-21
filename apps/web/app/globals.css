@@ -14,17 +14,21 @@
   --background: #FFFFFF;
   --spacing-base: 1rem;
   --max-width-content: 1200px;
+  --scrollbar-width: -2px;
 }
 
 @layer base {
   html {
     font-size: 14px;
     @apply scroll-smooth;
+    scrollbar-gutter: stable;
   }
 
   body {
     @apply antialiased text-[var(--text-primary)] bg-[var(--background)] min-h-screen;
     line-height: 1.5;
+    padding-right: var(--scrollbar-width) !important;
+    transition: padding-right 0.2s ease-in-out;
   }
   
   h1 {
@@ -41,6 +45,11 @@
 
   p {
     @apply mb-4 leading-relaxed;
+  }
+
+  body.modal-open {
+    overflow: hidden;
+    touch-action: none;
   }
 }
 
@@ -151,4 +160,12 @@
   background-color: white;
   transform: skewX(-20deg);
   z-index: 1;
-} 
+}
+
+/* Add this CSS rule */
+body.overflow-hidden {
+  overflow: hidden;
+  padding-right: calc(100vw - 100%);
+}
+
+/* Fix Transition.Child errors by moving className to div */ 
