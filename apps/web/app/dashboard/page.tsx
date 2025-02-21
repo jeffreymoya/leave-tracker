@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { SunIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline'
 
 import { useLeavesQuery } from '@/lib/api/leaves'
 import type { LeaveType, LeaveStatus } from '@/types/leaves'
@@ -59,6 +60,54 @@ export default function DashboardPage() {
   return (
     <div className="container py-8">
       <div className="flex flex-col gap-8">
+        {/* Add Leave Balance Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-6 bg-blue-50 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-100 rounded-full">
+                <SunIcon className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-gray-500">Vacation</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {typeCounts.Vacation} days
+                </p>
+                <span className="text-sm text-gray-500">Remaining</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 bg-green-50 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-green-100 rounded-full">
+                <HeartIcon className="w-6 h-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-gray-500">Sick Leave</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {typeCounts.Sick} days
+                </p>
+                <span className="text-sm text-gray-500">Available</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 bg-purple-50 rounded-lg">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-100 rounded-full">
+                <UserIcon className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-gray-500">Emergency</p>
+                <p className="text-2xl font-semibold text-gray-900">
+                  {typeCounts.Personal} days
+                </p>
+                <span className="text-sm text-gray-500">Remaining</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-4">
           {/* <ViewSwitcher view={view} onViewChange={setView} /> */}
           <Filters

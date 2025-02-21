@@ -67,7 +67,9 @@ export function LeaveRow({ leave, isSelected, _isExpanded, onSelect, onClick }: 
         
         <div className="text-sm text-gray-500">
           {!leave.attachments?.length ? (
-            <XMarkIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+            <div className="flex justify-center items-center min-h-[28px]">
+              <XMarkIcon className="h-5 w-5 text-red-500" aria-hidden="true" />
+            </div>
           ) : (
             <div className="flex items-center gap-2">
               {leave.attachments.map(attachment => (
