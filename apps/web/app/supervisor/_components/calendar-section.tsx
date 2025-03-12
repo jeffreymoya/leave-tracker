@@ -34,7 +34,7 @@ interface CalendarSectionProps {
 }
 
 export function CalendarSection({ events, currentDate, onDateChange }: CalendarSectionProps) {
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <div className="relative">
@@ -42,23 +42,20 @@ export function CalendarSection({ events, currentDate, onDateChange }: CalendarS
       <motion.div
         layout
         className={`${isExpanded ? 'w-full' : 'w-auto'} mx-4 sm:mx-6 lg:mx-8`}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ type: "spring", bounce: 0.35, duration: 0.6 }}
       >
-        <motion.button
-          layout
+        <button
           onClick={() => setIsExpanded(!isExpanded)}
           className={`ct flex items-center gap-2 p-3 rounded-t-lg shadow-lg mt-5 ring-1 ring-black ring-opacity-5 bg-gray-50 ${
             isExpanded
               ? ''
               : ' hover:bg-gray-100 transition-colors rounded-lg'
           }`}
-          whileHover={{ scale: isExpanded ? 1 : 1.02 }}
-          whileTap={{ scale: isExpanded ? 1 : 0.98 }}
         >
           <span className="ct text-md font-normal text-[var(--text-primary)] whitespace-nowrap">
             Team Calendar
           </span>
-          <motion.svg
+          <svg
             className={`w-5 h-5 transform transition-transform ${
               isExpanded ? 'rotate-180' : 'rotate-0'
             }`}
@@ -67,8 +64,8 @@ export function CalendarSection({ events, currentDate, onDateChange }: CalendarS
             viewBox="0 0 24 24"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </motion.svg>
-        </motion.button>
+          </svg>
+        </button>
       </motion.div>
 
       {/* Calendar Content */}
@@ -78,6 +75,13 @@ export function CalendarSection({ events, currentDate, onDateChange }: CalendarS
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 600 }}
             exit={{ opacity: 0, height: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 150,
+              damping: 15,
+              bounce: 0.3,
+              duration: 0.8
+            }}
             className="cs bg-white shadow-lg ring-1 ring-black ring-opacity-5 mx-4 sm:mx-6 lg:mx-8"
             style={{ 
               marginTop: '-1px',
